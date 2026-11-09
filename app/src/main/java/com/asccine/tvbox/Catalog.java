@@ -65,8 +65,8 @@ final class Catalog {
     }
 
     private static CredentialStore.Credentials cachedCreds;
-    private static String cachedProfile = "";
     private static String owner = "";
+    private static final java.util.Set<String> REFRESHING = new java.util.HashSet<>();
     private static final Map<String, List<Cat>> CATS = new HashMap<>();
     private static final Map<String, List<XtreamApi.Item>> RECENT = new HashMap<>();
     private static final Map<String, XtreamApi.Details> DETAILS =
@@ -82,19 +82,17 @@ final class Catalog {
 
     // ---------- Login em uso ----------
 
+    /** O login é UM SÓ para o aparelho: trocar de perfil não recarrega nem pede login. */
     static synchronized CredentialStore.Credentials creds(Context ctx) {
-        String pid = Profiles.currentId(ctx);
-        if (cachedCreds == null || !pid.equals(cachedProfile)) {
+        if (cachedCreds == null) {
             cachedCreds = CredentialStore.load(ctx);
-            cachedProfile = pid;
         }
         return cachedCreds;
     }
 
-    /** Esquece o login e os dados em memória (trocou de lista ou de perfil). */
+    /** Esquece o login e os dados em memória (trocou de lista, ou "Atualizar"). */
     static synchronized void invalidate() {
         cachedCreds = null;
-        cachedProfile = "";
         owner = "";
         CATS.clear();
         RECENT.clear();
@@ -203,8 +201,8 @@ final class Catalog {
 
     /**
      * Os itens mais recentes do tipo (campo "added", até 200), já sem bloqueados e adultos.
-     * Servidor: lê a lista aos poucos e guarda só os 200 mais novos. M3U (sem data):
-     * usa os primeiros itens da primeira categoria da lista.
+     * Ordem de busca: 1) memória; 2) arquivo guardado (validade de 6 horas: se estiver velho,
+     * é mostrado na hora e atualizado por trás, para a próxima vez); 3) a lista do servidor.
      */
     static List<XtreamApi.Item> recent(Context ctx, XtreamApi.Kind kind) throws IOException {
         final CredentialStore.Credentials c = need(ctx);
@@ -213,29 +211,70 @@ final class Catalog {
             base = RECENT.get(kind.name());
         }
         if (base == null) {
-            final List<XtreamApi.Item> top = new ArrayList<>();
-            if (isM3u(c)) {
-                List<Cat> cats = categories(ctx, kind);
-                String first = null;
-                for (Cat g : cats) {
-                    if (!g.adult) {
-                        first = g.id;
-                        break;
-                    }
+            final String ownerKey = HomeCache.ownerKey(c);
+            HomeCache.Entry saved = HomeCache.load(ctx, ownerKey, kind);
+            if (saved != null) {
+                base = saved.items;
+                if (!saved.fresh()) {
+                    refreshInBackground(ctx, c, kind, ownerKey);
                 }
-                top.addAll(M3uApi.page(c.m3uUrl, kind, first, 0, 60, true));
             } else {
-                XtreamApi.streamAll(c.server, c.user, c.pass, kind, item -> {
-                    insertNewest(top, item);
-                    return true;
-                });
+                base = computeRecent(ctx, c, kind);
+                HomeCache.save(ctx, ownerKey, kind, base);
             }
-            base = top;
             synchronized (Catalog.class) {
                 RECENT.put(kind.name(), base);
             }
         }
         return filter(ctx, base, false);
+    }
+
+    /** Lê a lista do servidor e devolve os 200 mais novos (lento: é a conta pesada). */
+    private static List<XtreamApi.Item> computeRecent(Context ctx, CredentialStore.Credentials c,
+                                                      XtreamApi.Kind kind) throws IOException {
+        final List<XtreamApi.Item> top = new ArrayList<>();
+        if (isM3u(c)) {
+            List<Cat> cats = categories(ctx, kind);
+            String first = null;
+            for (Cat g : cats) {
+                if (!g.adult) {
+                    first = g.id;
+                    break;
+                }
+            }
+            top.addAll(M3uApi.page(c.m3uUrl, kind, first, 0, 60, true));
+        } else {
+            XtreamApi.streamAll(c.server, c.user, c.pass, kind, item -> {
+                insertNewest(top, item);
+                return true;
+            });
+        }
+        return top;
+    }
+
+    /** Atualiza o arquivo guardado sem atrapalhar a tela (vale na próxima vez que abrir). */
+    private static void refreshInBackground(final Context ctx,
+                                            final CredentialStore.Credentials c,
+                                            final XtreamApi.Kind kind, final String ownerKey) {
+        final String id = ownerKey + kind.name();
+        synchronized (Catalog.class) {
+            if (!REFRESHING.add(id)) {
+                return;
+            }
+        }
+        final Context app = ctx.getApplicationContext();
+        new Thread(() -> {
+            try {
+                List<XtreamApi.Item> fresh = computeRecent(app, c, kind);
+                HomeCache.save(app, ownerKey, kind, fresh);
+            } catch (Exception ignored) {
+                // sem internet agora: continua valendo o que já está guardado
+            } finally {
+                synchronized (Catalog.class) {
+                    REFRESHING.remove(id);
+                }
+            }
+        }).start();
     }
 
     private static void insertNewest(List<XtreamApi.Item> top, XtreamApi.Item it) {
@@ -270,8 +309,18 @@ final class Catalog {
 
     /** Cinco destaques: filmes e séries bem avaliados e recentes, intercalados. */
     static List<XtreamApi.Item> hero(Context ctx) throws IOException {
-        List<XtreamApi.Item> movies = top10(ctx, XtreamApi.Kind.MOVIE);
-        List<XtreamApi.Item> series = top10(ctx, XtreamApi.Kind.SERIES);
+        return heroFrom(top10(ctx, XtreamApi.Kind.MOVIE), top10(ctx, XtreamApi.Kind.SERIES));
+    }
+
+    /** Monta os 5 destaques a partir dos Top 10 (qualquer um dos dois pode ser nulo). */
+    static List<XtreamApi.Item> heroFrom(List<XtreamApi.Item> movies,
+                                         List<XtreamApi.Item> series) {
+        if (movies == null) {
+            movies = new ArrayList<>();
+        }
+        if (series == null) {
+            series = new ArrayList<>();
+        }
         List<XtreamApi.Item> out = new ArrayList<>();
         int i = 0;
         while (out.size() < 5 && (i < movies.size() || i < series.size())) {

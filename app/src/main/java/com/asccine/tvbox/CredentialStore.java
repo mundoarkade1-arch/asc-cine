@@ -10,6 +10,8 @@ import android.util.Base64;
 
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -17,7 +19,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
 /**
- * Guarda o login no armazenamento privado do app.
+ * Guarda o login (a LISTA) no armazenamento privado do app.
+ * O login é UM SÓ para o aparelho inteiro: vale para todos os perfis.
  * Os valores são criptografados (AES-GCM) com uma chave do Android Keystore.
  * Se o Keystore do aparelho não funcionar, guarda sem criptografia
  * (continua dentro do armazenamento privado do app).
@@ -28,6 +31,8 @@ public final class CredentialStore {
     public static final String MODE_M3U = "m3u";
 
     private static final String PREFS = "asc_login";
+    /** Nome antigo (um arquivo por perfil): usado só para migrar. */
+    private static final String LEGACY_PREFIX = "asc_login_";
     private static final String KEY_ALIAS = "asc_cine_key";
     private static final String PREFIX_ENC = "K:";
     private static final String PREFIX_PLAIN = "P:";
@@ -52,7 +57,7 @@ public final class CredentialStore {
     private CredentialStore() {
     }
 
-    public static void save(Context context, Credentials c) {
+    public static synchronized void save(Context context, Credentials c) {
         SharedPreferences.Editor ed = prefs(context).edit();
         ed.putString("mode", c.mode);
         ed.putString("server", protect(c.server));
@@ -63,7 +68,8 @@ public final class CredentialStore {
     }
 
     /** Devolve o login salvo, ou null se não houver (ou se não for possível ler). */
-    public static Credentials load(Context context) {
+    public static synchronized Credentials load(Context context) {
+        migrateLegacy(context);
         SharedPreferences p = prefs(context);
         String mode = p.getString("mode", null);
         if (mode == null) {
@@ -83,12 +89,55 @@ public final class CredentialStore {
         }
     }
 
-    public static void clear(Context context) {
+    /**
+     * Migração simples: antes havia um login por perfil (asc_login_&lt;id&gt;). Se ainda não existe
+     * o login único do aparelho, copia o do perfil atual (ou, na falta dele, o de outro perfil).
+     * Os valores já estão protegidos: são copiados como estão.
+     */
+    static synchronized void migrateLegacy(Context context) {
+        Context app = context.getApplicationContext();
+        SharedPreferences single = prefs(context);
+        if (single.getString("mode", null) != null) {
+            return;
+        }
+        List<String> ids = new ArrayList<>();
+        ids.add(Profiles.currentId(context));
+        for (Profiles.P p : Profiles.list(context)) {
+            if (!ids.contains(p.id)) {
+                ids.add(p.id);
+            }
+        }
+        for (String id : ids) {
+            SharedPreferences old = app.getSharedPreferences(LEGACY_PREFIX + id,
+                    Context.MODE_PRIVATE);
+            String mode = old.getString("mode", null);
+            if (mode == null) {
+                continue;
+            }
+            single.edit()
+                    .putString("mode", mode)
+                    .putString("server", old.getString("server", ""))
+                    .putString("user", old.getString("user", ""))
+                    .putString("pass", old.getString("pass", ""))
+                    .putString("m3u", old.getString("m3u", ""))
+                    .commit();
+            return;
+        }
+    }
+
+    /** Apaga o arquivo de login antigo de um perfil (usado ao excluir o perfil). */
+    static void clearLegacy(Context context, String profileId) {
+        context.getApplicationContext()
+                .getSharedPreferences(LEGACY_PREFIX + profileId, Context.MODE_PRIVATE)
+                .edit().clear().apply();
+    }
+
+    public static synchronized void clear(Context context) {
         prefs(context).edit().clear().apply();
     }
 
     private static SharedPreferences prefs(Context context) {
-        return context.getApplicationContext().getSharedPreferences(PREFS + "_" + Profiles.currentId(context), Context.MODE_PRIVATE);
+        return context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
 
     // ---------- Proteção dos valores ----------

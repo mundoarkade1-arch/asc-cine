@@ -19,9 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Banner grande do topo da Home: cinco destaques que giram sozinhos a cada ~8 s enquanto o
- * foco está no banner. Imagem larga com degradê escuro, selo FILME/SÉRIE, nota, sinopse e o
- * botão "Assistir Agora". Esquerda e direita trocam de destaque.
+ * Banner grande do topo da Home: cinco destaques que giram sozinhos a cada ~8 s, em ciclo,
+ * SEMPRE que o banner está visível na tela (mesmo com o foco na barra lateral ou em outra
+ * faixa). Pausa só quando o banner sai da tela (rolou para baixo) ou a janela vai para trás.
+ * Imagem larga com degradê escuro, selo FILME/SÉRIE, nota, sinopse e o botão "Assistir Agora".
+ * Esquerda e direita (no botão) trocam de destaque e reiniciam a contagem dos 8 s.
  */
 final class HeroView extends FrameLayout {
 
@@ -39,22 +41,43 @@ final class HeroView extends FrameLayout {
     private final LinearLayout dots;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final List<XtreamApi.Item> items = new ArrayList<>();
+    private final android.graphics.Rect visRect = new android.graphics.Rect();
     private int idx = -1;
     private int shownFor = -1;
     private boolean running;
+    private boolean paused;
 
     private final Runnable tick = new Runnable() {
         @Override
         public void run() {
-            if (!running) {
+            if (!running || paused) {
                 return;
             }
-            if (button.hasFocus() && items.size() > 1) {
+            if (items.size() > 1 && onScreen()) {
                 show((idx + 1) % items.size());
             }
             handler.postDelayed(this, ROTATE_MS);
         }
     };
+
+    /** O banner está (pelo menos pela metade) dentro da tela? */
+    private boolean onScreen() {
+        if (!isShown() || getWindowVisibility() != VISIBLE || getHeight() <= 0) {
+            return false;
+        }
+        if (!getGlobalVisibleRect(visRect)) {
+            return false;
+        }
+        return visRect.height() * 2 >= getHeight();
+    }
+
+    /** Recomeça a contagem de 8 s (depois de trocar o destaque com as setas). */
+    private void restartTimer() {
+        handler.removeCallbacks(tick);
+        if (running && !paused) {
+            handler.postDelayed(tick, ROTATE_MS);
+        }
+    }
 
     HeroView(Context c, ShellActivity act, Screen owner, int heightPx) {
         super(c);
@@ -152,10 +175,12 @@ final class HeroView extends FrameLayout {
             }
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 show((idx + 1) % items.size());
+                restartTimer();
                 return true;
             }
             if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 show((idx - 1 + items.size()) % items.size());
+                restartTimer();
                 return true;
             }
             return false;
@@ -173,6 +198,44 @@ final class HeroView extends FrameLayout {
     void setItems(List<XtreamApi.Item> list) {
         items.clear();
         items.addAll(list);
+        idx = -1;
+        buildDots();
+        if (!items.isEmpty()) {
+            show(0);
+        }
+        restartTimer();
+    }
+
+    /**
+     * Troca a lista de destaques SEM mexer no que está na tela agora (usado quando chega o
+     * segundo Top 10). O destaque atual continua em primeiro lugar e a contagem não zera.
+     */
+    void replaceItems(List<XtreamApi.Item> list) {
+        if (items.isEmpty() || idx < 0 || idx >= items.size()) {
+            setItems(list);
+            return;
+        }
+        XtreamApi.Item cur = items.get(idx);
+        String curKey = UserLists.keyOf(cur);
+        List<XtreamApi.Item> next = new ArrayList<>();
+        next.add(cur);
+        for (XtreamApi.Item it : list) {
+            if (next.size() >= 5) {
+                break;
+            }
+            if (!UserLists.keyOf(it).equals(curKey)) {
+                next.add(it);
+            }
+        }
+        items.clear();
+        items.addAll(next);
+        idx = 0;
+        shownFor = 0;
+        buildDots();
+        paintDots();
+    }
+
+    private void buildDots() {
         dots.removeAllViews();
         Context c = getContext();
         for (int i = 0; i < items.size(); i++) {
@@ -182,20 +245,45 @@ final class HeroView extends FrameLayout {
             lp.rightMargin = Ui.dp(c, 6);
             dots.addView(d, lp);
         }
-        if (!items.isEmpty()) {
-            show(0);
+        paintDots();
+    }
+
+    private void paintDots() {
+        Context c = getContext();
+        for (int d = 0; d < dots.getChildCount(); d++) {
+            View dot = dots.getChildAt(d);
+            boolean on = d == idx;
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) dot.getLayoutParams();
+            lp.width = Ui.dp(c, on ? 28 : 8);
+            dot.setLayoutParams(lp);
+            dot.setBackground(Ui.shape(on ? C.LIME : C.TEXT3, Ui.dp(c, 4), 0, 0));
         }
     }
 
+    /** Começa a girar. */
     void start() {
-        if (!running) {
-            running = true;
-            handler.postDelayed(tick, ROTATE_MS);
+        running = true;
+        paused = false;
+        restartTimer();
+    }
+
+    /** Pausa (a janela foi para trás). */
+    void pause() {
+        paused = true;
+        handler.removeCallbacks(tick);
+    }
+
+    /** Volta a girar (a janela voltou). */
+    void resume() {
+        if (running && paused) {
+            paused = false;
+            restartTimer();
         }
     }
 
     void stop() {
         running = false;
+        paused = false;
         handler.removeCallbacksAndMessages(null);
     }
 
@@ -214,14 +302,7 @@ final class HeroView extends FrameLayout {
         button.setText(series ? "Assistir T1 Ep. 1" : "Assistir Agora");
         ImageLoader.load(poster, it.icon, 480);
         backdrop.setImageDrawable(null);
-        for (int d = 0; d < dots.getChildCount(); d++) {
-            View dot = dots.getChildAt(d);
-            boolean on = d == i;
-            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) dot.getLayoutParams();
-            lp.width = Ui.dp(c, on ? 28 : 8);
-            dot.setLayoutParams(lp);
-            dot.setBackground(Ui.shape(on ? C.LIME : C.TEXT3, Ui.dp(c, 4), 0, 0));
-        }
+        paintDots();
         final int mine = i;
         shownFor = i;
         owner.bg(() -> Catalog.details(c, it), new Bg.Done<XtreamApi.Details>() {

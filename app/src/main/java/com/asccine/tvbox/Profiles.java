@@ -10,21 +10,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Perfis do aparelho (no máximo 5). Cada perfil tem a sua lista (login), favoritos,
- * bloqueados e "Continue assistindo": esses dados ficam em arquivos separados, cujo nome
- * termina com o id do perfil. Aqui só ficam nome, avatar e qual perfil está ativo.
+ * Perfis do aparelho (no máximo 5). A LISTA (login) é uma só para o aparelho (ver
+ * CredentialStore). Cada perfil tem os seus favoritos, bloqueados, "Continue assistindo" e
+ * o que já foi assistido: esses dados ficam em arquivos separados, cujo nome termina com o
+ * id do perfil. Aqui só ficam nome, avatar e qual perfil está ativo.
  */
 public final class Profiles {
 
     public static final int MAX = 5;
     private static final String PREFS = "asc_profiles";
     private static final String DEFAULT_ID = "p1";
+    private static final String DEFAULT_NAME = "Visitante";
 
-    /** Cores dos avatares (todas derivadas da paleta preto, branco e limão). */
-    private static final int[] AVATAR_BG = {
-            0xFFC8FF00, 0xFFFFFFFF, 0xFFA8A8A8, 0xFFE4FF80, 0xFF6F8F00, 0xFF3A3A3A};
-    private static final int[] AVATAR_FG = {
-            0xFF101010, 0xFF101010, 0xFF101010, 0xFF101010, 0xFFFFFFFF, 0xFFC8FF00};
+    /** Os 12 avatares desenhados em vetor (6 masculinos primeiro, depois 6 femininos). */
+    private static final int[] AVATARS = {
+            R.drawable.avatar_01, R.drawable.avatar_02, R.drawable.avatar_03,
+            R.drawable.avatar_04, R.drawable.avatar_05, R.drawable.avatar_06,
+            R.drawable.avatar_07, R.drawable.avatar_08, R.drawable.avatar_09,
+            R.drawable.avatar_10, R.drawable.avatar_11, R.drawable.avatar_12};
 
     public static final class P {
         public final String id;
@@ -45,15 +48,12 @@ public final class Profiles {
     }
 
     public static int avatarCount() {
-        return AVATAR_BG.length;
+        return AVATARS.length;
     }
 
-    public static int avatarBg(int i) {
-        return AVATAR_BG[Math.abs(i) % AVATAR_BG.length];
-    }
-
-    public static int avatarFg(int i) {
-        return AVATAR_FG[Math.abs(i) % AVATAR_FG.length];
+    /** Desenho (recurso) do avatar de número i (0 a 11). */
+    public static int avatarRes(int i) {
+        return AVATARS[Math.abs(i) % AVATARS.length];
     }
 
     /** Primeira letra do nome, em maiúscula. */
@@ -86,7 +86,7 @@ public final class Profiles {
             // lista estragada: recomeça com o perfil padrão
         }
         if (out.isEmpty()) {
-            out.add(new P(DEFAULT_ID, "Visitante", 0));
+            out.add(new P(DEFAULT_ID, DEFAULT_NAME, 0));
             write(c, out);
         }
         cache = out;
@@ -116,11 +116,45 @@ public final class Profiles {
         return list(c).get(0);
     }
 
-    public static synchronized void setCurrent(Context c, String id) {
-        cacheCurrent = id;
-        prefs(c).edit().putString("current", id).apply();
+    public static void setCurrent(Context c, String id) {
+        synchronized (Profiles.class) {
+            cacheCurrent = id;
+            prefs(c).edit().putString("current", id).apply();
+        }
+        // Fora do bloqueio de Profiles (UserLists também chama Profiles: evita travar).
         UserLists.reset();
     }
+
+    // ---------- Primeira vez ----------
+
+    /**
+     * true quando o aparelho ainda não passou pela criação do primeiro perfil.
+     * Quem já usava o app com mais de um perfil, ou com um perfil que não é o "Visitante"
+     * padrão, não precisa passar por isso.
+     */
+    public static synchronized boolean needsWelcome(Context c) {
+        if (prefs(c).getBoolean("welcomed", false)) {
+            return false;
+        }
+        List<P> all = list(c);
+        if (all.size() == 1 && all.get(0).id.equals(DEFAULT_ID)
+                && DEFAULT_NAME.equals(all.get(0).name) && all.get(0).avatar == 0) {
+            return true;
+        }
+        markWelcomed(c);
+        return false;
+    }
+
+    public static synchronized void markWelcomed(Context c) {
+        prefs(c).edit().putBoolean("welcomed", true).apply();
+    }
+
+    /** Id do perfil padrão (o primeiro da lista). */
+    public static synchronized String firstId(Context c) {
+        return list(c).get(0).id;
+    }
+
+    // ---------- Criar, mudar e excluir ----------
 
     /** Cria um perfil. Devolve null se já houver 5. */
     public static synchronized P add(Context c, String name, int avatar) {
@@ -144,26 +178,47 @@ public final class Profiles {
         write(c, out);
     }
 
-    /** Apaga o perfil e os dados dele. Não apaga o último perfil. */
-    public static synchronized boolean remove(Context c, String id) {
-        List<P> all = list(c);
-        if (all.size() <= 1) {
-            return false;
+    /**
+     * Apaga o perfil e os dados dele (Continue assistindo, favoritos, bloqueados e o que
+     * foi assistido). NUNCA apaga o login do aparelho. Não apaga o último perfil.
+     */
+    public static boolean remove(Context c, String id) {
+        // Garante que um login antigo (por perfil) já foi copiado para o login único.
+        CredentialStore.migrateLegacy(c);
+        boolean ok = removeLocked(c, id);
+        if (ok) {
+            CredentialStore.clearLegacy(c, id);
+            PlaybackProgress.clearProfile(c, id);
+            SeriesProgress.clearProfile(c, id);
         }
-        List<P> out = new ArrayList<>();
-        for (P p : all) {
-            if (!p.id.equals(id)) {
-                out.add(p);
+        return ok;
+    }
+
+    private static boolean removeLocked(Context c, String id) {
+        String newCurrent = null;
+        synchronized (Profiles.class) {
+            List<P> all = list(c);
+            if (all.size() <= 1) {
+                return false;
+            }
+            List<P> out = new ArrayList<>();
+            for (P p : all) {
+                if (!p.id.equals(id)) {
+                    out.add(p);
+                }
+            }
+            write(c, out);
+            String[] files = {"asc_continue_", "asc_lists_"};
+            for (String f : files) {
+                c.getApplicationContext().getSharedPreferences(f + id, Context.MODE_PRIVATE)
+                        .edit().clear().apply();
+            }
+            if (id.equals(cacheCurrent)) {
+                newCurrent = out.get(0).id;
             }
         }
-        write(c, out);
-        String[] files = {"asc_login_", "asc_continue_", "asc_lists_"};
-        for (String f : files) {
-            c.getApplicationContext().getSharedPreferences(f + id, Context.MODE_PRIVATE)
-                    .edit().clear().apply();
-        }
-        if (id.equals(cacheCurrent)) {
-            setCurrent(c, out.get(0).id);
+        if (newCurrent != null) {
+            setCurrent(c, newCurrent);
         }
         return true;
     }
@@ -185,11 +240,26 @@ public final class Profiles {
         }
     }
 
+    /** Nome do perfil: até 16 letras. Nome todo em MAIÚSCULAS (teclado) vira "Maria Silva". */
     private static String cutName(String s) {
         String t = s == null ? "" : s.trim();
         if (t.isEmpty()) {
             t = "Perfil";
         }
-        return t.length() > 16 ? t.substring(0, 16) : t;
+        if (t.length() > 16) {
+            t = t.substring(0, 16).trim();
+        }
+        if (t.equals(t.toUpperCase()) && !t.equals(t.toLowerCase())) {
+            StringBuilder b = new StringBuilder();
+            boolean up = true;
+            String low = t.toLowerCase();
+            for (int i = 0; i < low.length(); i++) {
+                char ch = low.charAt(i);
+                b.append(up ? Character.toUpperCase(ch) : ch);
+                up = ch == ' ';
+            }
+            t = b.toString();
+        }
+        return t;
     }
 }

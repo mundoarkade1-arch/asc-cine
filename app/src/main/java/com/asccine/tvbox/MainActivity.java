@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 /**
  * Porta de entrada (sem tela própria): pede a senha do app se houver, depois decide entre
- * escolher perfil, entrar na lista ou ir direto para o início.
+ * entrar na lista, criar o primeiro perfil ou escolher o perfil.
  */
 public class MainActivity extends Activity {
 
@@ -45,12 +45,18 @@ public class MainActivity extends Activity {
                 });
     }
 
+    /**
+     * Sem lista (primeira vez): pede a lista. Com lista: primeira vez do aparelho = criar o
+     * primeiro perfil; depois disso, SEMPRE a tela "Quem está assistindo?" (mesmo com um
+     * perfil só).
+     */
     private void route() {
-        if (Profiles.list(this).size() > 1) {
-            startActivity(new Intent(this, ProfilesActivity.class).putExtra("pick", true));
+        if (Catalog.creds(this) == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+        } else if (Profiles.needsWelcome(this)) {
+            startActivity(new Intent(this, ProfilesActivity.class).putExtra("welcome", true));
         } else {
-            startActivity(new Intent(this, Catalog.creds(this) == null
-                    ? LoginActivity.class : ShellActivity.class));
+            startActivity(new Intent(this, ProfilesActivity.class).putExtra("pick", true));
         }
         finish();
     }

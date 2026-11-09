@@ -28,3 +28,7 @@
 - Ids de pacote e de FileProvider: `com.asccine.tvbox` / `.fileprovider`.
 - `Updater.REPOSITORY` = `mundoarkade1-arch/asc-cine`. O workflow publica em `v<VERSION_CODE>`.
 - `Nav` guarda o item aberto em memória (para o endereço do vídeo não ir no Intent).
+
+## Novos neste lote
+- HomeCache.java: guarda em arquivo os itens mais novos (validade 6 h).
+- res/drawable/avatar_01.xml a avatar_12.xml: os 12 avatares em vetor.

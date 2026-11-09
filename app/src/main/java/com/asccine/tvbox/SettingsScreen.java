@@ -62,11 +62,14 @@ final class SettingsScreen extends Screen {
 
         section("Perfil e lista");
         row("Perfis", Profiles.current(act).name, this::openProfiles);
-        row("Trocar de lista", "", () -> {
-            Intent i = new Intent(act, LoginActivity.class);
-            i.putExtra("switch", true);
-            act.startActivity(i);
-        });
+        row("Trocar de lista", "Vale para todos", () -> Dialogs.confirm(act, "Trocar de lista",
+                "A lista é uma só para o aparelho. Se você trocar, ela muda para TODOS os "
+                        + "perfis. Os favoritos e o que cada perfil já assistiu continuam.",
+                "Trocar", () -> {
+                    Intent i = new Intent(act, LoginActivity.class);
+                    i.putExtra("switch", true);
+                    act.startActivity(i);
+                }));
         codeBlock();
 
         section("Segurança");
@@ -296,8 +299,9 @@ final class SettingsScreen extends Screen {
 
     private void clearUsage() {
         Dialogs.confirm(act, "Apagar dados de uso",
-                "Isso apaga o Continue assistindo, os minutos onde você parou e a busca "
-                        + "guardada. Seu login, favoritos, senhas e perfis continuam.",
+                "Isso apaga, só neste perfil, o Continue assistindo e os minutos onde você "
+                        + "parou. Apaga também a busca guardada. A lista do aparelho, os "
+                        + "favoritos, as senhas e os perfis continuam.",
                 "Apagar", () -> {
                     ContinueStore.clear(act);
                     PlaybackProgress.clear(act);

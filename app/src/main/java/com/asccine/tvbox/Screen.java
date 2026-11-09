@@ -26,6 +26,10 @@ abstract class Screen {
     void onResume() {
     }
 
+    /** A janela do app foi para trás (outra tela por cima ou app em segundo plano). */
+    void onPause() {
+    }
+
     /** A tela saiu: cancelar tudo e soltar memória. */
     void onHide() {
         for (Bg.Handle h : tasks) {

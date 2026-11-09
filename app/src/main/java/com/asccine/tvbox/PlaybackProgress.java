@@ -96,7 +96,7 @@ public final class PlaybackProgress {
         if (k == null) {
             return;
         }
-        SharedPreferences sp = ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE);
+        SharedPreferences sp = prefs(ctx);
         SharedPreferences.Editor ed = sp.edit();
         ed.putString(k, positionMs + "|" + durationMs + "|" + System.currentTimeMillis());
 
@@ -138,7 +138,7 @@ public final class PlaybackProgress {
         if (k == null) {
             return null;
         }
-        SharedPreferences sp = ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE);
+        SharedPreferences sp = prefs(ctx);
         String v;
         try {
             v = sp.getString(k, null);
@@ -167,7 +167,29 @@ public final class PlaybackProgress {
     /** Apaga o histórico de reprodução de filmes e episódios. */
     public static void clear(Context ctx) {
         if (ctx != null) {
-            ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE).edit().clear().apply();
+            prefs(ctx).edit().clear().apply();
+        }
+    }
+
+
+    /**
+     * Cada perfil tem o seu arquivo. O perfil mais antigo (p1) continua usando o nome antigo,
+     * para ninguém perder o que já assistiu.
+     */
+    private static String fileFor(String profileId) {
+        return "p1".equals(profileId) ? FILE : FILE + "_" + profileId;
+    }
+
+    private static SharedPreferences prefs(Context ctx) {
+        return ctx.getApplicationContext().getSharedPreferences(
+                fileFor(Profiles.currentId(ctx)), Context.MODE_PRIVATE);
+    }
+
+    /** Apaga o que foi assistido por um perfil (ao excluir o perfil). */
+    static void clearProfile(Context ctx, String profileId) {
+        if (ctx != null) {
+            ctx.getApplicationContext().getSharedPreferences(fileFor(profileId),
+                    Context.MODE_PRIVATE).edit().clear().apply();
         }
     }
 

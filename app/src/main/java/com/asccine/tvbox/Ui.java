@@ -150,6 +150,14 @@ final class Ui {
         return v;
     }
 
+    /** Retângulo limão grande (rótulo "Filmes"/"Séries" do Top 10). Texto sempre #101010. */
+    static TextView limeTagBig(Context c, CharSequence t, float sp) {
+        TextView v = title(c, t, sp, C.BG);
+        v.setBackground(shape(C.LIME, dp(c, 10), 0, 0));
+        v.setPadding(dp(c, 18), dp(c, 6), dp(c, 18), dp(c, 6));
+        return v;
+    }
+
     /** Pílula escura pequena (nota, gênero). */
     static TextView pill(Context c, CharSequence t, float sp, int fill, int color) {
         TextView v = text(c, t, sp, color);
@@ -187,6 +195,11 @@ final class Ui {
     /** Largura da capa nas faixas da Home (um pouco menor que na grade). */
     static int rowPw(Context c) {
         return Math.round(gridPw(c) * 0.8f);
+    }
+
+    /** Largura da capa no Top 10: maior que nas outras faixas (e que na grade). */
+    static int topPw(Context c) {
+        return Math.round(gridPw(c) * 1.2f);
     }
 
     /** Deixa o sistema escolher onde começa o foco. */

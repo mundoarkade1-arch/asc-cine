@@ -85,7 +85,7 @@ final class SearchScreen extends Screen {
     }
 
     private void openKeyboard() {
-        SearchKeyboard.show(act, "Buscar filmes e séries", new SearchKeyboard.Listener() {
+        SearchKeyboard.show(act, "Buscar filmes e séries", "Buscar", 2, new SearchKeyboard.Listener() {
             @Override
             public void onSearch(String text) {
                 run(text);

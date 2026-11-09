@@ -43,7 +43,7 @@ final class Bg {
     }
 
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
-    private static final ExecutorService POOL = Executors.newFixedThreadPool(3);
+    private static final ExecutorService POOL = Executors.newFixedThreadPool(5);
 
     private Bg() {
     }

@@ -44,10 +44,10 @@ final class Sidebar extends LinearLayout {
         final View marker;
         final ImageView icon;
         final TextView label;
-        final TextView avatar;
+        final ImageView avatar;
 
         Row(int id, LinearLayout view, View marker, ImageView icon, TextView label,
-            TextView avatar) {
+            ImageView avatar) {
             this.id = id;
             this.view = view;
             this.marker = marker;
@@ -75,17 +75,54 @@ final class Sidebar extends LinearLayout {
 
         addProfile(c, profileName, profileAvatar);
         addGap(c, 14);
-        addRow(c, FAVORITES, R.drawable.ic_bookmark, "Favoritos");
-        addRow(c, SEARCH, R.drawable.ic_search, "Buscar");
         addRow(c, HOME, R.drawable.ic_home, "Início");
+        addRow(c, SEARCH, R.drawable.ic_search, "Buscar");
+        addRow(c, FAVORITES, R.drawable.ic_bookmark, "Favoritos");
         addRow(c, MOVIES, R.drawable.ic_film, "Filmes");
         addRow(c, SERIES, R.drawable.ic_tv, "Séries");
         addRow(c, EXPLORE, R.drawable.ic_grid, "Explorar");
-        addRow(c, REFRESH, R.drawable.ic_refresh, "Atualizar");
         View spacer = new View(c);
         addView(spacer, new LayoutParams(1, 0, 1f));
+        addRow(c, REFRESH, R.drawable.ic_refresh, "Atualizar");
         addRow(c, SETTINGS, R.drawable.ic_settings, "Ajustes");
+        linkFocus();
         setActive(HOME);
+    }
+
+    /**
+     * Foco explícito da barra: cada item aponta para o de cima e o de baixo (o primeiro aponta
+     * para si mesmo em cima, o último em baixo). Assim o foco nunca sai da barra por engano
+     * e não depende da busca automática de foco do Android.
+     */
+    private void linkFocus() {
+        for (int i = 0; i < rows.size(); i++) {
+            View v = rows.get(i).view;
+            v.setId(View.generateViewId());
+        }
+        for (int i = 0; i < rows.size(); i++) {
+            View v = rows.get(i).view;
+            v.setNextFocusUpId(rows.get(Math.max(0, i - 1)).view.getId());
+            v.setNextFocusDownId(rows.get(Math.min(rows.size() - 1, i + 1)).view.getId());
+            v.setNextFocusLeftId(v.getId());
+        }
+    }
+
+    /** Põe o foco no item vizinho (delta -1 = para cima, +1 = para baixo). Nas pontas, fica. */
+    private void moveFocus(View from, int delta) {
+        int at = -1;
+        for (int i = 0; i < rows.size(); i++) {
+            if (rows.get(i).view == from) {
+                at = i;
+                break;
+            }
+        }
+        if (at < 0) {
+            return;
+        }
+        int to = Math.max(0, Math.min(rows.size() - 1, at + delta));
+        if (to != at) {
+            rows.get(to).view.requestFocus();
+        }
     }
 
     private void addGap(Context c, int dp) {
@@ -105,16 +142,26 @@ final class Sidebar extends LinearLayout {
         row.setOnClickListener(v -> listener.onSelect(id));
         row.setOnFocusChangeListener((v, has) -> post(this::syncExpanded));
         row.setOnKeyListener((v, keyCode, e) -> {
-            if (e.getAction() != KeyEvent.ACTION_DOWN) {
+            if (keyCode != KeyEvent.KEYCODE_DPAD_RIGHT && keyCode != KeyEvent.KEYCODE_DPAD_UP
+                    && keyCode != KeyEvent.KEYCODE_DPAD_DOWN
+                    && keyCode != KeyEvent.KEYCODE_DPAD_LEFT) {
                 return false;
             }
+            if (e.getAction() != KeyEvent.ACTION_DOWN) {
+                return true;
+            }
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                return listener.onRight();
+                // Sai da barra e vai para o primeiro item visível da tela atual.
+                listener.onRight();
+                return true;
             }
-            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                listener.onTouched();
+            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                return true;
             }
-            return false;
+            // Cima e baixo: só andam entre os itens da barra.
+            listener.onTouched();
+            moveFocus(v, keyCode == KeyEvent.KEYCODE_DPAD_UP ? -1 : 1);
+            return true;
         });
         return row;
     }
@@ -124,9 +171,9 @@ final class Sidebar extends LinearLayout {
         View marker = new View(c);
         marker.setVisibility(INVISIBLE);
         row.addView(marker, new LayoutParams(Ui.dp(c, 3), Ui.dp(c, 3)));
-        TextView av = Ui.title(c, Profiles.initial(name), 18, Profiles.avatarFg(avatarIdx));
-        av.setGravity(Gravity.CENTER);
-        av.setBackground(Ui.shape(Profiles.avatarBg(avatarIdx), Ui.dp(c, 12), 0, 0));
+        ImageView av = new ImageView(c);
+        av.setImageResource(Profiles.avatarRes(avatarIdx));
+        av.setScaleType(ImageView.ScaleType.CENTER_CROP);
         LayoutParams alp = new LayoutParams(Ui.dp(c, 40), Ui.dp(c, 40));
         alp.leftMargin = Ui.dp(c, 9);
         row.addView(av, alp);

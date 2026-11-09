@@ -13,10 +13,13 @@ import android.widget.TextView;
 /**
  * Teclado de letras na tela, para digitar o nome da busca só com setas e OK.
  * Formato QWERTY brasileiro (ABNT): fileira de números, Q a P, A a Ç, Z a M.
- * Última fileira: Apagar, Espaço (barra grande no meio), Buscar e Sair.
+ * Última fileira: Apagar, Espaço (barra grande no meio), o botão de confirmar e Sair.
+ * O texto do botão de confirmar vem por parâmetro: "Buscar" na busca, "Confirmar" nos nomes
+ * de perfil.
  * Segurando o OK numa vogal (ou no N), abre uma janelinha com os acentos dela.
  * O botão Voltar do controle e a tecla "Sair" fecham o teclado (onCancel).
- * "Buscar" entrega o texto digitado (onSearch), se tiver pelo menos 2 letras.
+ * O botão de confirmar entrega o texto digitado (onSearch), se tiver o mínimo de letras
+ * (2 na busca; 1 nos nomes).
  */
 public final class SearchKeyboard {
 
@@ -33,11 +36,12 @@ public final class SearchKeyboard {
     private static final int COLOR_ERROR = 0xFFFF5C5C;
     private static final int COLOR_BACK = 0xFF101010;
     private static final int MAX_LEN = 40;
-    private static final int MIN_LEN = 2;
 
     private final Activity activity;
     private final Listener listener;
     private final StringBuilder buf = new StringBuilder();
+    private String actionLabel = "Buscar";
+    private int minLen = 2;
     private Dialog dialog;
     private TextView tvText;
     private TextView tvMessage;
@@ -48,9 +52,20 @@ public final class SearchKeyboard {
         this.listener = listener;
     }
 
-    /** Abre o teclado. */
+    /** Abre o teclado da busca (botão "Buscar", mínimo de 2 letras). */
     public static SearchKeyboard show(Activity activity, String title, Listener listener) {
+        return show(activity, title, "Buscar", 2, listener);
+    }
+
+    /**
+     * Abre o teclado com o texto do botão de confirmar e o mínimo de letras à escolha.
+     * Ex.: show(activity, "Nome do perfil", "Confirmar", 1, listener).
+     */
+    public static SearchKeyboard show(Activity activity, String title, String actionLabel,
+                                      int minLen, Listener listener) {
         SearchKeyboard k = new SearchKeyboard(activity, listener);
+        k.actionLabel = actionLabel;
+        k.minLen = Math.max(1, minLen);
         k.build(title);
         if (!activity.isFinishing() && !activity.isDestroyed()) {
             k.dialog.show();
@@ -104,7 +119,7 @@ public final class SearchKeyboard {
                 {"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"},
                 {"A", "S", "D", "F", "G", "H", "J", "K", "L", "Ç"},
                 {"Z", "X", "C", "V", "B", "N", "M"},
-                {"Apagar", "Espaço", "Buscar", "Sair"}
+                {"Apagar", "Espaço", actionLabel, "Sair"}
         };
         Button firstKey = null;
         for (String[] row : rows) {
@@ -114,7 +129,7 @@ public final class SearchKeyboard {
             for (final String label : row) {
                 int width = 64;
                 if (label.length() > 1) {
-                    width = "Espaço".equals(label) ? 300 : 120;
+                    width = "Espaço".equals(label) ? 300 : 130;
                 }
                 Button key = makeKey(label, width);
                 key.setOnClickListener(v -> onKey(label));
@@ -232,11 +247,12 @@ public final class SearchKeyboard {
             dialog.cancel();
             return;
         }
-        if ("Buscar".equals(label)) {
+        if (actionLabel.equals(label)) {
             String text = buf.toString().trim();
-            if (text.length() < MIN_LEN) {
+            if (text.length() < minLen) {
                 tvMessage.setTextColor(COLOR_ERROR);
-                tvMessage.setText("Digite pelo menos " + MIN_LEN + " letras.");
+                tvMessage.setText("Digite pelo menos " + minLen
+                        + (minLen == 1 ? " letra." : " letras."));
                 return;
             }
             searched = true;

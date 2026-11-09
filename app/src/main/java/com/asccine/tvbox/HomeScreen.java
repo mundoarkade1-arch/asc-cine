@@ -15,6 +15,8 @@ import java.util.List;
 /**
  * Início: banner com 5 destaques, Continue assistindo, Top 10 de filmes e de séries,
  * favoritos e faixas por categoria. Tudo carrega aos poucos, em segundo plano.
+ * O Top 10 de filmes e o de séries são calculados ao mesmo tempo (em paralelo) e o resultado
+ * fica guardado em arquivo por 6 horas (ver Catalog.recent e HomeCache).
  */
 final class HomeScreen extends Screen {
 
@@ -34,6 +36,9 @@ final class HomeScreen extends Screen {
     private final LinearLayout catBox;
     private volatile boolean dead;
     private int rowNumber = 1;
+    private int topPending;
+    private List<XtreamApi.Item> topMovies;
+    private List<XtreamApi.Item> topSeries;
 
     HomeScreen(ShellActivity act) {
         super(act);
@@ -112,7 +117,13 @@ final class HomeScreen extends Screen {
         if (dead) {
             return;
         }
+        hero.resume();
         loadLocal();
+    }
+
+    @Override
+    void onPause() {
+        hero.pause();
     }
 
     @Override
@@ -191,57 +202,57 @@ final class HomeScreen extends Screen {
 
     // ---------- Banner e Top 10 ----------
 
+    /** Top 10 de filmes e de séries: os dois ao mesmo tempo; cada um aparece quando fica pronto. */
     private void loadTop() {
+        topPending = 2;
         bg(() -> Catalog.top10(ctx, XtreamApi.Kind.MOVIE), new Bg.Done<List<XtreamApi.Item>>() {
             @Override
             public void ok(List<XtreamApi.Item> movies) {
+                topMovies = movies;
                 fillTop(slotTopMovies, "Filmes", movies);
-                loadTopSeries();
+                topArrived();
             }
 
             @Override
             public void fail(Exception e) {
-                showError();
-                loadTopSeries();
+                topArrived();
             }
         });
-    }
-
-    private void loadTopSeries() {
         bg(() -> Catalog.top10(ctx, XtreamApi.Kind.SERIES), new Bg.Done<List<XtreamApi.Item>>() {
             @Override
             public void ok(List<XtreamApi.Item> series) {
+                topSeries = series;
                 fillTop(slotTopSeries, "Séries", series);
-                loadHero();
+                topArrived();
             }
 
             @Override
             public void fail(Exception e) {
-                loadHero();
+                topArrived();
             }
         });
     }
 
-    private void loadHero() {
-        bg(() -> Catalog.hero(ctx), new Bg.Done<List<XtreamApi.Item>>() {
-            @Override
-            public void ok(List<XtreamApi.Item> list) {
-                if (list.isEmpty()) {
-                    return;
-                }
-                status.setVisibility(View.GONE);
-                retry.setVisibility(View.GONE);
-                hero.setVisibility(View.VISIBLE);
-                hero.setItems(list);
-                hero.start();
-                act.focusReady(HomeScreen.this);
+    /** Um dos Top 10 chegou: monta (ou atualiza) o banner com o que já se tem. */
+    private void topArrived() {
+        topPending--;
+        List<XtreamApi.Item> list = Catalog.heroFrom(topMovies, topSeries);
+        if (list.isEmpty()) {
+            if (topPending <= 0) {
+                showError();
             }
-
-            @Override
-            public void fail(Exception e) {
-                // sem destaques: a Home segue só com as faixas
-            }
-        });
+            return;
+        }
+        status.setVisibility(View.GONE);
+        retry.setVisibility(View.GONE);
+        hero.setVisibility(View.VISIBLE);
+        if (hero.hasItems()) {
+            hero.replaceItems(list);
+        } else {
+            hero.setItems(list);
+            hero.start();
+        }
+        act.focusReady(this);
     }
 
     private void fillTop(LinearLayout slot, String tag, List<XtreamApi.Item> items) {
@@ -252,9 +263,37 @@ final class HomeScreen extends Screen {
         retry.setVisibility(View.GONE);
         slot.removeAllViews();
         slot.setVisibility(View.VISIBLE);
-        slot.addView(header("Top 10 de hoje", tag));
+        slot.addView(topHeader(tag));
         slot.addView(itemRow(items, true, null));
         act.focusReady(this);
+    }
+
+    /** Título grande do Top 10: "Top 10 de hoje", rótulo limão grande e uma linha fina limão. */
+    private View topHeader(String tag) {
+        LinearLayout h = new LinearLayout(ctx);
+        h.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams hlp = new LinearLayout.LayoutParams(-1, -2);
+        hlp.setMargins(Ui.dp(ctx, 36), Ui.dp(ctx, 30), Ui.dp(ctx, 36), Ui.dp(ctx, 4));
+        h.setLayoutParams(hlp);
+
+        LinearLayout line1 = new LinearLayout(ctx);
+        line1.setOrientation(LinearLayout.HORIZONTAL);
+        line1.setGravity(Gravity.CENTER_VERTICAL);
+        TextView t = Ui.title(ctx, Ui.highlight("Top 10 de hoje", "Top 10", C.LIME), 40, C.TEXT);
+        t.setSingleLine(true);
+        line1.addView(t, new LinearLayout.LayoutParams(-2, -2));
+        LinearLayout.LayoutParams glp = new LinearLayout.LayoutParams(-2, -2);
+        glp.leftMargin = Ui.dp(ctx, 20);
+        line1.addView(Ui.limeTagBig(ctx, tag, 22), glp);
+        h.addView(line1, new LinearLayout.LayoutParams(-2, -2));
+
+        View underline = new View(ctx);
+        underline.setBackground(Ui.shape(C.LIME, Ui.dp(ctx, 2), 0, 0));
+        LinearLayout.LayoutParams ulp = new LinearLayout.LayoutParams(Ui.dp(ctx, 200),
+                Ui.dp(ctx, 3));
+        ulp.topMargin = Ui.dp(ctx, 10);
+        h.addView(underline, ulp);
+        return h;
     }
 
     private void showError() {
@@ -411,7 +450,7 @@ final class HomeScreen extends Screen {
     private View itemRow(List<XtreamApi.Item> items, boolean top10, final Runnable more) {
         HorizontalScrollView hs = rowScroller();
         LinearLayout line = rowLine(hs);
-        int pw = Ui.rowPw(ctx);
+        int pw = top10 ? Ui.topPw(ctx) : Ui.rowPw(ctx);
         for (int i = 0; i < items.size(); i++) {
             final XtreamApi.Item it = items.get(i);
             Card card = new Card(ctx, pw, true);

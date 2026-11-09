@@ -285,9 +285,22 @@ public class LoginActivity extends Activity {
         });
     }
 
+    /**
+     * A lista foi salva (vale para o aparelho todo). Primeira vez: criar o perfil; depois:
+     * escolher o perfil. Se foi só uma troca de lista (Ajustes), volta direto para o app.
+     */
     private void enter() {
         Catalog.invalidate();
-        startActivity(new Intent(this, ShellActivity.class));
+        Intent i;
+        if (switching) {
+            i = new Intent(this, ShellActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        } else if (Profiles.needsWelcome(this)) {
+            i = new Intent(this, ProfilesActivity.class).putExtra("welcome", true);
+        } else {
+            i = new Intent(this, ProfilesActivity.class).putExtra("pick", true);
+        }
+        startActivity(i);
         finish();
     }
 

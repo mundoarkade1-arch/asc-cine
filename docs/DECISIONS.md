@@ -29,3 +29,14 @@
 13. **Sem minificação (R8)** no release, por segurança de compilação; pode ser ligada depois.
 14. **Atualização:** só HTTPS, `version.json` em `releases/latest/download`, URL do APK precisa
     começar com o prefixo do repositório, SHA-256 conferido antes de instalar, instalação por FileProvider.
+
+## Lote de melhorias (Início, perfis, avatares, login único)
+
+- **Início mais rápida.** Escolhido: guardar em arquivo (HomeCache, criptografado, validade de 6 h) os 200 itens mais novos de Filmes e de Séries. Com arquivo válido, banner e Top 10 aparecem na hora, sem rede. Se o arquivo passou de 6 h, ele é mostrado na hora e atualizado por trás só para a próxima vez (a tela não muda sozinha, para não tirar o foco). Sem arquivo, Filmes e Séries são calculados ao mesmo tempo (Bg com 5 threads) e o banner aparece assim que o primeiro Top 10 chega; quando o segundo chega, entra no banner sem trocar o destaque atual. "Atualizar" apaga o guardado.
+- **Banner gira sempre que visível** (a cada 8 s), pausa só quando sai da tela ou a janela vai para trás (Screen.onPause). Setas no botão trocam e reiniciam a contagem.
+- **Menu lateral:** ordem avatar, Início, Buscar, Favoritos, Filmes, Séries, Explorar; embaixo Atualizar e Ajustes. Foco explícito: cima/baixo tratados por tecla e por nextFocusUp/DownId; nas pontas fica parado; direita sai para a tela.
+- **Top 10:** título 40sp, rótulo limão grande, linha limão, capas 20% maiores que a grade.
+- **Detalhe:** layout em duas colunas que cabe em 1080p. Série: botão Temporada, 30 primeiros episódios, "Ver mais" abre tela inteira. Sinopse em 3 linhas com "Ler mais".
+- **Perfis:** primeira vez (depois da lista) = criar perfil (escrever nome + avatar, ou usar Visitante). Depois, sempre "Quem está assistindo?". Quem já tinha perfis não passa pela criação.
+- **Avatares:** 12 VectorDrawable (avatar_01 a 12), 6 masculinos e 6 femininos.
+- **Login único:** arquivo asc_login do aparelho, com migração do asc_login_<perfil>. Continue, favoritos, bloqueados, PlaybackProgress e SeriesProgress são por perfil (o perfil p1 mantém os nomes antigos de arquivo).

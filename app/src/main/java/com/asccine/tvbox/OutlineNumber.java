@@ -15,7 +15,7 @@ final class OutlineNumber extends View {
         super(c);
         this.text = text;
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(Ui.dp(c, 3));
+        paint.setStrokeWidth(Ui.dp(c, 4));
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setColor(C.LIME);
         paint.setTypeface(Ui.bold(c));

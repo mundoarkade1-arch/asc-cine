@@ -127,6 +127,7 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
         if (id == Sidebar.REFRESH) {
             Catalog.invalidate();
             ImageLoader.clear();
+            HomeCache.clear(this);
             final android.content.Context app = getApplicationContext();
             new Thread(() -> SearchIndex.clear(app)).start();
             showScreen(currentId < 0 ? Sidebar.HOME : currentId, true);
@@ -203,6 +204,14 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
         if (current != null) {
             current.onResume();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        if (current != null) {
+            current.onPause();
+        }
+        super.onPause();
     }
 
     @Override

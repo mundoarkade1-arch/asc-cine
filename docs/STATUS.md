@@ -18,3 +18,6 @@ legendas/áudio, atualização automática, código do aparelho com o ASC Admin.
 ## Diferenças em relação ao pedido (ver DECISIONS.md)
 - Fonte Poppins (no lugar de Space Grotesk/Outfit), senha do app só de 4 números,
   sem reaproveitamento de bitmaps (inBitmap).
+
+## Lote de melhorias (sem teste no aparelho ainda)
+Feito no código: cache da Início, banner automático, menu lateral, Top 10 maior, detalhe de série sem rolar, fluxo de perfis, 12 avatares, login único. Não compilado aqui (sem Android SDK): conferir o build no GitHub Actions e testar no TX9.
