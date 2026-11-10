@@ -54,3 +54,9 @@
 - O ícone de busca saiu do menu lateral. A Início tem uma barra grande "Pesquisar filmes e séries" no alto, acima do banner. Ela abre o teclado; se cancelar sem digitar, continua na Início. Ao buscar, abre a tela de resultados (SearchScreen), e Voltar leva para a Início.
 - Corrigido o banner cortado: ao focar no botão do banner ou na barra, a Início rola até o topo.
 - Seta para cima no botão do banner leva à barra Pesquisar.
+
+## Busca mais rápida
+- O índice da busca (SearchIndex) agora é preparado em segundo plano, com prioridade baixa, 6 s depois de a Início abrir (Catalog.warmSearchIndex). Quando a pessoa pesquisa, já está pronto.
+- Filmes e séries são pesquisados ao mesmo tempo (duas threads) e montados em paralelo (uma trava por arquivo).
+- Validade do índice: 12 h. Índice velho é usado na hora e refeito por trás (a busca não espera).
+- Só na primeiríssima busca sem índice pronto a pessoa espera a montagem.

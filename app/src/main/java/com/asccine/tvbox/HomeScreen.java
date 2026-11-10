@@ -157,6 +157,7 @@ final class HomeScreen extends Screen {
         loadTop();
         loadCategories();
         loadExpiry();
+        Catalog.warmSearchIndex(ctx);
     }
 
     @Override

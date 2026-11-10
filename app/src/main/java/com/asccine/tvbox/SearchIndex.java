@@ -35,15 +35,31 @@ public final class SearchIndex {
         boolean isCancelled();
     }
 
-    /** Validade do índice: 2 horas. Para mudar, mude só este número. */
-    private static final long TTL_MS = 2L * 60L * 60L * 1000L;
+    /**
+     * Validade do índice: 12 horas. Passou disso, o índice velho ainda é usado na hora e um
+     * novo é feito por trás (a busca nunca espera por isso). Para mudar, mude só este número.
+     */
+    private static final long TTL_MS = 12L * 60L * 60L * 1000L;
     /** Teto de itens e de tamanho do arquivo. */
     private static final int MAX_ITEMS = 200000;
     private static final long MAX_FILE_BYTES = 60L * 1024L * 1024L;
     private static final String DIR = "search_index";
     private static final String SEP = "\t";
 
-    private static final Object BUILD_LOCK = new Object();
+    /** Uma trava por arquivo: filmes e séries podem ser montados ao mesmo tempo. */
+    private static final java.util.Map<String, Object> LOCKS = new java.util.HashMap<>();
+    private static final java.util.Set<String> REBUILDING = new java.util.HashSet<>();
+
+    private static Object lockFor(File file) {
+        synchronized (LOCKS) {
+            Object l = LOCKS.get(file.getPath());
+            if (l == null) {
+                l = new Object();
+                LOCKS.put(file.getPath(), l);
+            }
+            return l;
+        }
+    }
 
     private SearchIndex() {
     }
@@ -62,8 +78,12 @@ public final class SearchIndex {
             return;
         }
         File file = fileFor(ctx, server, user, kind);
-        if (!isFresh(file)) {
+        if (!file.exists() || file.length() == 0) {
+            // Primeira vez: não tem como fugir, precisa montar (os dois tipos em paralelo).
             build(file, server, user, pass, kind, cancel);
+        } else if (!isFresh(file)) {
+            // Velho: usa agora mesmo e refaz por trás, sem fazer a pessoa esperar.
+            rebuildInBackground(file, server, user, pass, kind);
         }
         if (cancel != null && cancel.isCancelled()) {
             return;
@@ -108,6 +128,46 @@ public final class SearchIndex {
         }
     }
 
+    /**
+     * Deixa o índice pronto antes de a pessoa pesquisar (chamado em segundo plano pela
+     * Início). Se já está novo, não faz nada.
+     */
+    public static void warmUp(Context ctx, String server, String user, String pass,
+                              XtreamApi.Kind kind) {
+        File file = fileFor(ctx, server, user, kind);
+        if (isFresh(file)) {
+            return;
+        }
+        try {
+            build(file, server, user, pass, kind, null);
+        } catch (IOException ignored) {
+            // sem rede agora: a busca tenta de novo quando for usada
+        }
+    }
+
+    private static void rebuildInBackground(final File file, final String server,
+                                            final String user, final String pass,
+                                            final XtreamApi.Kind kind) {
+        synchronized (REBUILDING) {
+            if (!REBUILDING.add(file.getPath())) {
+                return;
+            }
+        }
+        Thread t = new Thread(() -> {
+            try {
+                build(file, server, user, pass, kind, null);
+            } catch (IOException ignored) {
+                // continua valendo o índice velho
+            } finally {
+                synchronized (REBUILDING) {
+                    REBUILDING.remove(file.getPath());
+                }
+            }
+        });
+        t.setPriority(Thread.MIN_PRIORITY);
+        t.start();
+    }
+
     /** Apaga todos os índices (para usar, por exemplo, em "Trocar de lista"). */
     public static void clear(Context ctx) {
         File dir = new File(ctx.getApplicationContext().getCacheDir(), DIR);
@@ -132,7 +192,7 @@ public final class SearchIndex {
 
     private static void build(File file, String server, String user, String pass,
                               XtreamApi.Kind kind, final Cancel cancel) throws IOException {
-        synchronized (BUILD_LOCK) {
+        synchronized (lockFor(file)) {
             // Outra busca pode ter montado o índice enquanto esta esperava.
             if (isFresh(file)) {
                 return;

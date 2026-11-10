@@ -66,6 +66,7 @@ final class Catalog {
 
     private static CredentialStore.Credentials cachedCreds;
     private static String owner = "";
+    private static boolean searchWarmed;
     private static final java.util.Set<String> REFRESHING = new java.util.HashSet<>();
     private static final Map<String, List<Cat>> CATS = new HashMap<>();
     private static final Map<String, List<XtreamApi.Item>> RECENT = new HashMap<>();
@@ -93,6 +94,7 @@ final class Catalog {
     /** Esquece o login e os dados em memória (trocou de lista, ou "Atualizar"). */
     static synchronized void invalidate() {
         cachedCreds = null;
+        searchWarmed = false;
         owner = "";
         CATS.clear();
         RECENT.clear();
@@ -450,16 +452,78 @@ final class Catalog {
             return more;
         };
         XtreamApi.Kind[] kinds = {XtreamApi.Kind.MOVIE, XtreamApi.Kind.SERIES};
-        for (XtreamApi.Kind k : kinds) {
-            if (stop[0]) {
+        if (isM3u(c)) {
+            for (XtreamApi.Kind k : kinds) {
+                if (stop[0]) {
+                    return;
+                }
+                M3uApi.searchStream(c.m3uUrl, k, query, skipAdult, 100, wrap);
+            }
+            return;
+        }
+        // Xtream: filmes e séries pesquisados ao mesmo tempo (mais rápido).
+        final Object lock = new Object();
+        final XtreamApi.ResultListener safe = item -> {
+            synchronized (lock) {
+                return !stop[0] && wrap.onItem(item);
+            }
+        };
+        final IOException[] errors = new IOException[kinds.length];
+        Thread[] threads = new Thread[kinds.length];
+        for (int i = 0; i < kinds.length; i++) {
+            final int at = i;
+            final XtreamApi.Kind k = kinds[i];
+            threads[i] = new Thread(() -> {
+                try {
+                    SearchIndex.search(ctx, c.server, c.user, c.pass, k, query, skipAdult, 100,
+                            cancel, safe);
+                } catch (IOException e) {
+                    errors[at] = e;
+                }
+            });
+            threads[i].start();
+        }
+        for (Thread t : threads) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 return;
             }
-            if (isM3u(c)) {
-                M3uApi.searchStream(c.m3uUrl, k, query, skipAdult, 100, wrap);
-            } else {
-                SearchIndex.search(ctx, c.server, c.user, c.pass, k, query, skipAdult, 100,
-                        cancel, wrap);
+        }
+        if (errors[0] != null && errors[1] != null) {
+            throw errors[0];
+        }
+    }
+
+    /**
+     * Deixa o índice da busca pronto em segundo plano (prioridade baixa), alguns segundos
+     * depois de a Início abrir. Assim, quando a pessoa pesquisa, já está tudo pronto.
+     */
+    static void warmSearchIndex(Context ctx) {
+        final CredentialStore.Credentials c = creds(ctx);
+        if (c == null || isM3u(c)) {
+            return;
+        }
+        synchronized (Catalog.class) {
+            if (searchWarmed) {
+                return;
             }
+            searchWarmed = true;
+        }
+        final Context app = ctx.getApplicationContext();
+        for (final XtreamApi.Kind k : new XtreamApi.Kind[]{XtreamApi.Kind.MOVIE,
+                XtreamApi.Kind.SERIES}) {
+            Thread t = new Thread(() -> {
+                try {
+                    Thread.sleep(6000);
+                } catch (InterruptedException e) {
+                    return;
+                }
+                SearchIndex.warmUp(app, c.server, c.user, c.pass, k);
+            });
+            t.setPriority(Thread.MIN_PRIORITY);
+            t.start();
         }
     }
 
