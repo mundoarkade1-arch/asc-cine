@@ -48,6 +48,7 @@ final class GridScreen extends Screen {
         col.addView(head, new LinearLayout.LayoutParams(-1, -2));
         head.addView(Ui.title(act, kind == XtreamApi.Kind.MOVIE ? "Filmes" : "Séries", 34,
                 C.TEXT));
+        head.addView(makeSearchBar(act));
         View sp = new View(act);
         head.addView(sp, new LinearLayout.LayoutParams(0, 1, 1f));
         catButton = Ui.button(act, "Categoria: Todos", Ui.DARK);
@@ -104,6 +105,39 @@ final class GridScreen extends Screen {
     @Override
     View firstFocus() {
         return adapter.items.isEmpty() ? catButton : grid;
+    }
+
+    /** Barra "Pesquisar" discreta (a mesma da Início). */
+    private TextView makeSearchBar(final ShellActivity act) {
+        final TextView bar = Ui.text(act, "Pesquisar", 15, C.TEXT2);
+        bar.setGravity(Gravity.CENTER);
+        bar.setSingleLine(true);
+        bar.setFocusable(true);
+        bar.setClickable(true);
+        bar.setCompoundDrawablePadding(Ui.dp(act, 8));
+        android.graphics.drawable.Drawable lens = act.getResources()
+                .getDrawable(R.drawable.ic_search).mutate();
+        lens.setColorFilter(C.TEXT2, android.graphics.PorterDuff.Mode.SRC_IN);
+        lens.setBounds(0, 0, Ui.dp(act, 16), Ui.dp(act, 16));
+        bar.setCompoundDrawables(lens, null, null, null);
+        bar.setPadding(Ui.dp(act, 16), Ui.dp(act, 7), Ui.dp(act, 16), Ui.dp(act, 7));
+        bar.setBackground(Ui.focusBg(act, C.SURFACE, C.SURFACE, 20, C.LINE, Ui.dp(act, 1)));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(Ui.dp(act, 200), -2);
+        lp.leftMargin = Ui.dp(act, 24);
+        bar.setLayoutParams(lp);
+        bar.setOnClickListener(v -> SearchKeyboard.show(act, "Pesquisar filmes e séries",
+                "Buscar", 2, new SearchKeyboard.Listener() {
+                    @Override
+                    public void onSearch(String text) {
+                        act.openSearch(text);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        bar.requestFocus();
+                    }
+                }));
+        return bar;
     }
 
     @Override
