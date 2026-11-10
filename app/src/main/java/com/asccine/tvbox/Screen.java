@@ -26,6 +26,14 @@ abstract class Screen {
     void onResume() {
     }
 
+    /**
+     * Seta para cima que nenhuma tela tratou (ex.: primeira linha da grade). Devolve true se a
+     * tela cuidou (ex.: levou o foco para o botão de categoria).
+     */
+    boolean handleUp(View focused) {
+        return false;
+    }
+
     /** A janela do app foi para trás (outra tela por cima ou app em segundo plano). */
     void onPause() {
     }

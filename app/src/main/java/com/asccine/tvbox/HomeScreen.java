@@ -68,9 +68,9 @@ final class HomeScreen extends Screen {
         box.addView(retry, rlp);
 
         slotBanner = slot();
-        slotContinue = slot();
         slotTopMovies = slot();
         slotTopSeries = slot();
+        slotContinue = slot();
         slotFav = slot();
         catBox = new LinearLayout(act);
         catBox.setOrientation(LinearLayout.VERTICAL);
