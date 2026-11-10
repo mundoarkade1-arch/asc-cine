@@ -172,9 +172,6 @@ final class HeroView extends FrameLayout {
             }
         });
         button.setOnKeyListener((v, keyCode, e) -> {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-                return true; // para cima no banner: não acontece nada
-            }
             if (e.getAction() != KeyEvent.ACTION_DOWN || items.size() < 2) {
                 return false;
             }

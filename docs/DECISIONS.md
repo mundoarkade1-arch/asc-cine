@@ -49,3 +49,8 @@
 - Perfis: botão "Editar perfis" na tela "Quem está assistindo?" (mudar nome, avatar, excluir).
 - Busca: antes de buscar, botão no meio da tela e cartões pequenos de lançamentos (filmes e séries); depois de buscar, botão no alto e a grade.
 - Faixas por categoria da Início já tinham o cartão "Ver mais" no fim; foi mantido.
+
+## Barra Pesquisar na Início
+- O ícone de busca saiu do menu lateral. A Início tem uma barra grande "Pesquisar filmes e séries" no alto, acima do banner. Ela abre o teclado; se cancelar sem digitar, continua na Início. Ao buscar, abre a tela de resultados (SearchScreen), e Voltar leva para a Início.
+- Corrigido o banner cortado: ao focar no botão do banner ou na barra, a Início rola até o topo.
+- Seta para cima no botão do banner leva à barra Pesquisar.

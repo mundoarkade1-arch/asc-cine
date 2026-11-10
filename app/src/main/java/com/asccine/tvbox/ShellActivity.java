@@ -23,6 +23,8 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
     XtreamApi.Kind pendingKind;
     String pendingCat;
     String pendingCatName;
+    /** Texto digitado na barra Pesquisar da Início (a tela de resultados lê e apaga). */
+    String pendingQuery;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -92,6 +94,12 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
         content.addView(s.view(), new FrameLayout.LayoutParams(-1, -1));
         armed = true;
         s.onShow();
+    }
+
+    /** Mostra os resultados de uma pesquisa feita na barra da Início. */
+    void openSearch(String query) {
+        pendingQuery = query;
+        showScreen(Sidebar.SEARCH, true);
     }
 
     /** Abre a tela de Filmes ou Séries já numa categoria. */
@@ -260,6 +268,10 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
 
     @Override
     public void onBackPressed() {
+        if (currentId == Sidebar.SEARCH) {
+            showScreen(Sidebar.HOME, true);
+            return;
+        }
         if (sidebar.hasFocus()) {
             if (currentId != Sidebar.HOME) {
                 showScreen(Sidebar.HOME, false);

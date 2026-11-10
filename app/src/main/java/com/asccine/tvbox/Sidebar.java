@@ -76,7 +76,6 @@ final class Sidebar extends LinearLayout {
         addProfile(c, profileName, profileAvatar);
         addGap(c, 14);
         addRow(c, HOME, R.drawable.ic_home, "Início");
-        addRow(c, SEARCH, R.drawable.ic_search, "Buscar");
         addRow(c, FAVORITES, R.drawable.ic_bookmark, "Favoritos");
         addRow(c, MOVIES, R.drawable.ic_film, "Filmes");
         addRow(c, SERIES, R.drawable.ic_tv, "Séries");

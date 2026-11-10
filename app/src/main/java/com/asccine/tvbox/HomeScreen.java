@@ -26,6 +26,7 @@ final class HomeScreen extends Screen {
     private final ScrollView sv;
     private final LinearLayout box;
     private final HeroView hero;
+    private final TextView searchBar;
     private final TextView status;
     private final TextView retry;
     private final LinearLayout slotBanner;
@@ -52,9 +53,38 @@ final class HomeScreen extends Screen {
         box.setClipChildren(false);
         sv.addView(box, new FrameLayout.LayoutParams(-1, -2));
 
+        // Barra grande "Pesquisar" no alto, no meio da tela.
+        searchBar = Ui.text(act, "Pesquisar filmes e séries", 22, C.TEXT);
+        searchBar.setTypeface(Ui.bold(act));
+        searchBar.setGravity(Gravity.CENTER);
+        searchBar.setSingleLine(true);
+        searchBar.setFocusable(true);
+        searchBar.setClickable(true);
+        searchBar.setCompoundDrawablePadding(Ui.dp(act, 12));
+        android.graphics.drawable.Drawable lens = act.getResources()
+                .getDrawable(R.drawable.ic_search).mutate();
+        lens.setColorFilter(C.LIME, android.graphics.PorterDuff.Mode.SRC_IN);
+        searchBar.setCompoundDrawablesWithIntrinsicBounds(lens, null, null, null);
+        searchBar.setPadding(Ui.dp(act, 24), Ui.dp(act, 14), Ui.dp(act, 24), Ui.dp(act, 14));
+        searchBar.setBackground(Ui.focusBg(act, C.SURFACE, C.SURFACE, 30, C.LINE,
+                Ui.dp(act, 1)));
+        searchBar.setOnClickListener(v -> openSearchKeyboard());
+        LinearLayout.LayoutParams sbl = new LinearLayout.LayoutParams(-1, -2);
+        sbl.setMargins(Ui.dp(act, 110), Ui.dp(act, 16), Ui.dp(act, 110), Ui.dp(act, 12));
+        box.addView(searchBar, sbl);
+
         hero = new HeroView(act, act, this, Math.round(Ui.screenH(act) * 0.52f));
         hero.setVisibility(View.GONE);
         box.addView(hero);
+        // Ao voltar para a barra ou para o botão do banner, a tela sobe até o topo
+        // (antes o banner ficava cortado pela metade).
+        sv.getViewTreeObserver().addOnGlobalFocusChangeListener((oldF, newF) -> {
+            if (newF != null && (newF == searchBar
+                    || newF == hero.button())) {
+                sv.smoothScrollTo(0, 0);
+            }
+        });
+
 
         status = Ui.text(act, "Carregando...", 20, C.TEXT2);
         status.setGravity(Gravity.CENTER);
@@ -78,6 +108,22 @@ final class HomeScreen extends Screen {
         box.addView(catBox, new LinearLayout.LayoutParams(-1, -2));
         View end = new View(act);
         box.addView(end, new LinearLayout.LayoutParams(1, Ui.dp(act, 48)));
+    }
+
+    /** Abre o teclado. Se não digitar nada e voltar, continua na Início. */
+    private void openSearchKeyboard() {
+        SearchKeyboard.show(act, "Pesquisar filmes e séries", "Buscar", 2,
+                new SearchKeyboard.Listener() {
+                    @Override
+                    public void onSearch(String text) {
+                        act.openSearch(text);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        searchBar.requestFocus();
+                    }
+                });
     }
 
     private LinearLayout slot() {
