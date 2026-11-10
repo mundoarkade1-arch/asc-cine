@@ -53,7 +53,7 @@ final class HomeScreen extends Screen {
         box.setClipChildren(false);
         sv.addView(box, new FrameLayout.LayoutParams(-1, -2));
 
-        // Barra discreta "Pesquisar": pequena, no meio, sem roubar a cena.
+        // Barra discreta "Pesquisar": pequena, perto dos ícones, sem roubar a cena.
         searchBar = Ui.text(act, "Pesquisar", 15, C.TEXT2);
         searchBar.setGravity(Gravity.CENTER);
         searchBar.setSingleLine(true);
@@ -70,8 +70,8 @@ final class HomeScreen extends Screen {
                 Ui.dp(act, 1)));
         searchBar.setOnClickListener(v -> openSearchKeyboard());
         LinearLayout.LayoutParams sbl = new LinearLayout.LayoutParams(Ui.dp(act, 260), -2);
-        sbl.gravity = Gravity.CENTER_HORIZONTAL;
-        sbl.setMargins(0, Ui.dp(act, 8), 0, Ui.dp(act, 6));
+        sbl.gravity = Gravity.START;
+        sbl.setMargins(Ui.dp(act, 24), Ui.dp(act, 8), 0, Ui.dp(act, 6));
         box.addView(searchBar, sbl);
 
         hero = new HeroView(act, act, this, Math.round(Ui.screenH(act) * 0.52f));
