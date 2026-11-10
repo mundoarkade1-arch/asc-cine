@@ -245,8 +245,19 @@ final class Sidebar extends LinearLayout {
         }
     }
 
+    private boolean holdCollapsed;
+
+    /**
+     * Segura a barra fechada por um instante (troca de tela feita por fora da barra, como
+     * depois de uma pesquisa): evita ela abrir e fechar, piscando, quando o foco passa por ela.
+     */
+    void holdCollapsed(boolean on) {
+        holdCollapsed = on;
+        post(this::syncExpanded);
+    }
+
     private void syncExpanded() {
-        boolean open = hasFocus();
+        boolean open = hasFocus() && !holdCollapsed;
         for (Row r : rows) {
             r.label.setVisibility(open ? VISIBLE : GONE);
         }

@@ -99,7 +99,7 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
     /** Mostra os resultados de uma pesquisa feita na barra da Início. */
     void openSearch(String query) {
         pendingQuery = query;
-        showScreen(Sidebar.SEARCH, true);
+        switchFromContent(Sidebar.SEARCH);
     }
 
     /** Abre a tela de Filmes ou Séries já numa categoria. */
@@ -107,7 +107,14 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
         pendingKind = kind;
         pendingCat = catId;
         pendingCatName = catName;
-        showScreen(kind == XtreamApi.Kind.MOVIE ? Sidebar.MOVIES : Sidebar.SERIES, true);
+        switchFromContent(kind == XtreamApi.Kind.MOVIE ? Sidebar.MOVIES : Sidebar.SERIES);
+    }
+
+    /** Troca de tela a pedido do conteúdo (não da barra) sem a barra piscar. */
+    private void switchFromContent(int id) {
+        sidebar.holdCollapsed(true);
+        showScreen(id, true);
+        content.postDelayed(() -> sidebar.holdCollapsed(false), 1500);
     }
 
     /** A tela avisa que já tem conteúdo: se a pessoa não mexeu na barra, o foco vai para ele. */
@@ -191,7 +198,8 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
             return true;
         }
         if ((keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT
-                || keyCode == KeyEvent.KEYCODE_DPAD_UP) && smartKey(keyCode)) {
+                || keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+                && smartKey(keyCode)) {
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -225,6 +233,14 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
                 return true;
             }
             View n = f.focusSearch(View.FOCUS_UP);
+            return !(n != null && n != f && inContent(n));
+        }
+        if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+            // No fim da tela (Ajustes, grades, Início): para, não vai para a barra de ícones.
+            if (list) {
+                return true;
+            }
+            View n = f.focusSearch(View.FOCUS_DOWN);
             return !(n != null && n != f && inContent(n));
         }
         boolean left = keyCode == KeyEvent.KEYCODE_DPAD_LEFT;
