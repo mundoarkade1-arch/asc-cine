@@ -272,16 +272,24 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
             showScreen(Sidebar.HOME, true);
             return;
         }
+        if (currentId == Sidebar.HOME) {
+            // Na Início, Voltar pergunta se quer sair.
+            Dialogs.confirm(this, "Sair", "Deseja sair do ASC Cine?", "Sair", this::exitApp);
+            return;
+        }
         if (sidebar.hasFocus()) {
-            if (currentId != Sidebar.HOME) {
-                showScreen(Sidebar.HOME, false);
-            } else {
-                finish();
-            }
+            showScreen(Sidebar.HOME, false);
         } else {
             armed = false;
             sidebar.focusActive();
         }
+    }
+
+    /** Fecha o app por completo: tira das tarefas recentes e encerra o processo. */
+    private void exitApp() {
+        finishAndRemoveTask();
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
+                () -> android.os.Process.killProcess(android.os.Process.myPid()), 400);
     }
 
     @Override
