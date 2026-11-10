@@ -85,7 +85,9 @@ final class HeroView extends FrameLayout {
         this.owner = owner;
         setLayoutParams(new LinearLayout.LayoutParams(-1, heightPx));
         setBackgroundColor(C.BG);
-        setClipChildren(false);
+        // A foto do fundo nunca pode passar do banner (invadia o "Continue assistindo").
+        setClipChildren(true);
+        setClipToPadding(true);
 
         backdrop = new ImageView(c);
         backdrop.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -170,6 +172,9 @@ final class HeroView extends FrameLayout {
             }
         });
         button.setOnKeyListener((v, keyCode, e) -> {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                return true; // para cima no banner: não acontece nada
+            }
             if (e.getAction() != KeyEvent.ACTION_DOWN || items.size() < 2) {
                 return false;
             }
@@ -179,7 +184,10 @@ final class HeroView extends FrameLayout {
                 return true;
             }
             if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-                show((idx - 1 + items.size()) % items.size());
+                if (idx <= 0) {
+                    return false; // no primeiro destaque: esquerda vai para o menu
+                }
+                show(idx - 1);
                 restartTimer();
                 return true;
             }

@@ -107,6 +107,24 @@ final class Sidebar extends LinearLayout {
         }
     }
 
+    /** Foco no item da barra mais perto da altura y (em pixels da tela). */
+    void focusNearest(int y) {
+        View best = null;
+        int bestD = Integer.MAX_VALUE;
+        int[] loc = new int[2];
+        for (Row r : rows) {
+            r.view.getLocationOnScreen(loc);
+            int d = Math.abs(loc[1] + r.view.getHeight() / 2 - y);
+            if (d < bestD) {
+                bestD = d;
+                best = r.view;
+            }
+        }
+        if (best != null) {
+            best.requestFocus();
+        }
+    }
+
     /** Põe o foco no item vizinho (delta -1 = para cima, +1 = para baixo). Nas pontas, fica. */
     private void moveFocus(View from, int delta) {
         int at = -1;

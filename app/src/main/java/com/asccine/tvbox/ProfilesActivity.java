@@ -23,6 +23,7 @@ public class ProfilesActivity extends Activity {
 
     private boolean manage;
     private boolean welcome;
+    private boolean fromSettings;
     private LinearLayout row;
     private LinearLayout root;
 
@@ -31,6 +32,7 @@ public class ProfilesActivity extends Activity {
         super.onCreate(b);
         AppPrefs.applyWindow(this);
         manage = getIntent().getBooleanExtra("manage", false);
+        fromSettings = manage;
         welcome = getIntent().getBooleanExtra("welcome", false);
         root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -83,16 +85,38 @@ public class ProfilesActivity extends Activity {
         }
         if (manage) {
             TextView back = Ui.button(this, "Voltar", Ui.DARK);
-            back.setOnClickListener(v -> finish());
+            back.setOnClickListener(v -> leaveManage());
             LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(Ui.dp(this, 200), -2);
             blp.topMargin = Ui.dp(this, 40);
             root.addView(back, blp);
         } else {
-            TextView hint = Ui.text(this, "Para mudar ou excluir um perfil, segure o OK nele.",
-                    16, C.TEXT3);
-            LinearLayout.LayoutParams hlp = new LinearLayout.LayoutParams(-2, -2);
-            hlp.topMargin = Ui.dp(this, 36);
-            root.addView(hint, hlp);
+            TextView edit = Ui.button(this, "Editar perfis", Ui.DARK);
+            edit.setOnClickListener(v -> {
+                manage = true;
+                render();
+            });
+            LinearLayout.LayoutParams elp = new LinearLayout.LayoutParams(Ui.dp(this, 240), -2);
+            elp.topMargin = Ui.dp(this, 40);
+            root.addView(edit, elp);
+        }
+    }
+
+    /** Sai do modo de edição: volta para os Ajustes ou para "Quem está assistindo?". */
+    private void leaveManage() {
+        if (fromSettings) {
+            finish();
+        } else {
+            manage = false;
+            render();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (manage && !fromSettings && !welcome) {
+            leaveManage();
+        } else {
+            super.onBackPressed();
         }
     }
 

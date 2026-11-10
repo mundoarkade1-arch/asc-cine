@@ -40,3 +40,12 @@
 - **Perfis:** primeira vez (depois da lista) = criar perfil (escrever nome + avatar, ou usar Visitante). Depois, sempre "Quem está assistindo?". Quem já tinha perfis não passa pela criação.
 - **Avatares:** 12 VectorDrawable (avatar_01 a 12), 6 masculinos e 6 femininos.
 - **Login único:** arquivo asc_login do aparelho, com migração do asc_login_<perfil>. Continue, favoritos, bloqueados, PlaybackProgress e SeriesProgress são por perfil (o perfil p1 mantém os nomes antigos de arquivo).
+
+## Correções de uso (controle remoto, banner, busca, perfis)
+- Foto do banner agora é recortada no tamanho do banner (HeroView com clipChildren), não invade mais o "Continue assistindo".
+- "Continue assistindo" fica logo depois dos Top 10 de filmes e de séries.
+- Teclas inteligentes em ShellActivity.smartKey (só para setas que a tela não tratou): esquerda sem vizinho na linha vai para o item do menu na mesma altura; direita sem vizinho trava (não desce); cima sem nada em cima não faz nada (a grade leva ao botão de categoria/busca via Screen.handleUp).
+- Banner: esquerda no primeiro destaque vai para o menu; direita no último volta ao primeiro; cima não faz nada.
+- Perfis: botão "Editar perfis" na tela "Quem está assistindo?" (mudar nome, avatar, excluir).
+- Busca: antes de buscar, botão no meio da tela e cartões pequenos de lançamentos (filmes e séries); depois de buscar, botão no alto e a grade.
+- Faixas por categoria da Início já tinham o cartão "Ver mais" no fim; foi mantido.

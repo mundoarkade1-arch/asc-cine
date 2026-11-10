@@ -107,6 +107,15 @@ final class GridScreen extends Screen {
     }
 
     @Override
+    boolean handleUp(View focused) {
+        if (focused == grid) {
+            catButton.requestFocus();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     void onShow() {
         if (act.pendingKind == kind) {
             catId = act.pendingCat;

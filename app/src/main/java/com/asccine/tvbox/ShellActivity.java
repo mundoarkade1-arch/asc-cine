@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 
 /**
@@ -181,7 +182,80 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
             sidebar.focusActive();
             return true;
         }
+        if ((keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT
+                || keyCode == KeyEvent.KEYCODE_DPAD_UP) && smartKey(keyCode)) {
+            return true;
+        }
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * Setas que a tela não tratou. Aqui o foco fica esperto:
+     * - esquerda sem vizinho na mesma linha: vai para o item do menu na mesma altura;
+     * - direita sem vizinho (fim da faixa ou da grade): trava, não desce;
+     * - cima sem nada em cima: não abre o menu (a grade leva ao botão de categoria).
+     * Devolve true quando a tecla foi tratada.
+     */
+    private boolean smartKey(int keyCode) {
+        View f = getCurrentFocus();
+        if (f == null || current == null || sidebar.hasFocus()) {
+            return false;
+        }
+        boolean list = f instanceof android.widget.AbsListView;
+        View ref = f;
+        if (list) {
+            View sel = ((android.widget.AbsListView) f).getSelectedView();
+            if (sel != null) {
+                ref = sel;
+            }
+        }
+        if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+            if (current.handleUp(f)) {
+                return true;
+            }
+            if (list) {
+                return true;
+            }
+            View n = f.focusSearch(View.FOCUS_UP);
+            return !(n != null && n != f && inContent(n));
+        }
+        boolean left = keyCode == KeyEvent.KEYCODE_DPAD_LEFT;
+        if (!list && hasSideNeighbor(f, left ? View.FOCUS_LEFT : View.FOCUS_RIGHT)) {
+            return false;
+        }
+        if (left) {
+            int[] loc = new int[2];
+            ref.getLocationOnScreen(loc);
+            armed = false;
+            sidebar.focusNearest(loc[1] + ref.getHeight() / 2);
+        }
+        return true;
+    }
+
+    private boolean inContent(View v) {
+        View p = v;
+        while (p != null) {
+            if (p == content) {
+                return true;
+            }
+            android.view.ViewParent pp = p.getParent();
+            p = pp instanceof View ? (View) pp : null;
+        }
+        return false;
+    }
+
+    /** Existe um item à esquerda/direita, na MESMA linha, dentro da tela? */
+    private boolean hasSideNeighbor(View f, int dir) {
+        View n = f.focusSearch(dir);
+        if (n == null || n == f || !inContent(n)) {
+            return false;
+        }
+        int[] a = new int[2];
+        int[] b = new int[2];
+        f.getLocationOnScreen(a);
+        n.getLocationOnScreen(b);
+        int cy = b[1] + n.getHeight() / 2;
+        return cy >= a[1] && cy <= a[1] + f.getHeight();
     }
 
     @Override
