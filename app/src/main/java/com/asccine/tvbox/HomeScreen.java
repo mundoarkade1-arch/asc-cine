@@ -53,24 +53,25 @@ final class HomeScreen extends Screen {
         box.setClipChildren(false);
         sv.addView(box, new FrameLayout.LayoutParams(-1, -2));
 
-        // Barra grande "Pesquisar" no alto, no meio da tela.
-        searchBar = Ui.text(act, "Pesquisar filmes e séries", 22, C.TEXT);
-        searchBar.setTypeface(Ui.bold(act));
+        // Barra discreta "Pesquisar": pequena, no meio, sem roubar a cena.
+        searchBar = Ui.text(act, "Pesquisar", 15, C.TEXT2);
         searchBar.setGravity(Gravity.CENTER);
         searchBar.setSingleLine(true);
         searchBar.setFocusable(true);
         searchBar.setClickable(true);
-        searchBar.setCompoundDrawablePadding(Ui.dp(act, 12));
+        searchBar.setCompoundDrawablePadding(Ui.dp(act, 8));
         android.graphics.drawable.Drawable lens = act.getResources()
                 .getDrawable(R.drawable.ic_search).mutate();
-        lens.setColorFilter(C.LIME, android.graphics.PorterDuff.Mode.SRC_IN);
-        searchBar.setCompoundDrawablesWithIntrinsicBounds(lens, null, null, null);
-        searchBar.setPadding(Ui.dp(act, 24), Ui.dp(act, 14), Ui.dp(act, 24), Ui.dp(act, 14));
-        searchBar.setBackground(Ui.focusBg(act, C.SURFACE, C.SURFACE, 30, C.LINE,
+        lens.setColorFilter(C.TEXT2, android.graphics.PorterDuff.Mode.SRC_IN);
+        lens.setBounds(0, 0, Ui.dp(act, 16), Ui.dp(act, 16));
+        searchBar.setCompoundDrawables(lens, null, null, null);
+        searchBar.setPadding(Ui.dp(act, 16), Ui.dp(act, 7), Ui.dp(act, 16), Ui.dp(act, 7));
+        searchBar.setBackground(Ui.focusBg(act, C.SURFACE, C.SURFACE, 20, C.LINE,
                 Ui.dp(act, 1)));
         searchBar.setOnClickListener(v -> openSearchKeyboard());
-        LinearLayout.LayoutParams sbl = new LinearLayout.LayoutParams(-1, -2);
-        sbl.setMargins(Ui.dp(act, 110), Ui.dp(act, 16), Ui.dp(act, 110), Ui.dp(act, 12));
+        LinearLayout.LayoutParams sbl = new LinearLayout.LayoutParams(Ui.dp(act, 260), -2);
+        sbl.gravity = Gravity.CENTER_HORIZONTAL;
+        sbl.setMargins(0, Ui.dp(act, 8), 0, Ui.dp(act, 6));
         box.addView(searchBar, sbl);
 
         hero = new HeroView(act, act, this, Math.round(Ui.screenH(act) * 0.52f));
