@@ -36,7 +36,6 @@ public class ShellActivity extends Activity implements Sidebar.Listener {
             return;
         }
         FrameLayout root = new FrameLayout(this);
-        root.setBackgroundColor(C.BG);
         content = new FrameLayout(this);
         FrameLayout.LayoutParams clp = new FrameLayout.LayoutParams(-1, -1);
         clp.leftMargin = Ui.dp(this, 72);

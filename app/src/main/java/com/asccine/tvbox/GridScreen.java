@@ -35,7 +35,6 @@ final class GridScreen extends Screen {
         super(act);
         this.kind = kind;
         root = new FrameLayout(act);
-        root.setBackgroundColor(C.BG);
 
         LinearLayout col = new LinearLayout(act);
         col.setOrientation(LinearLayout.VERTICAL);
@@ -121,7 +120,7 @@ final class GridScreen extends Screen {
         lens.setBounds(0, 0, Ui.dp(act, 16), Ui.dp(act, 16));
         bar.setCompoundDrawables(lens, null, null, null);
         bar.setPadding(Ui.dp(act, 16), Ui.dp(act, 7), Ui.dp(act, 16), Ui.dp(act, 7));
-        bar.setBackground(Ui.focusBg(act, C.SURFACE, C.SURFACE, 20, C.LINE, Ui.dp(act, 1)));
+        bar.setBackground(Glass.focusBg(act, Glass.MID, 20));
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(Ui.dp(act, 200), -2);
         lp.leftMargin = Ui.dp(act, 24);
         bar.setLayoutParams(lp);

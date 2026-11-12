@@ -69,3 +69,12 @@
 - **XMLs sem cor solta:** `bg_button.xml` e avatares usam `@color/...`.
 - **Funções renomeadas (só nome):** `Ui.LIME`→`Ui.ACCENT`, `limeTag`→`accentTag`, `limeTagBig`→`accentTagBig`.
 - **Vermelho:** só no erro (`asc_error`), nunca decorativo. Gradientes: só as sombras escuras de leitura, como antes.
+
+## Vidro (glassmorphism) e fundo global
+- **Fundo único:** `bg_main.jpg` desenhado como fundo da janela (via `AppPrefs.applyWindow`), com camada escura de 72% (`Glass.BACKGROUND_OVERLAY`). As telas ficaram transparentes.
+- **Sem blur em tempo real:** o Android 5 e as TV Box fracas não aguentam. A imagem é desfocada UMA vez (bitmap de 96 px, em segundo plano) e cada card desenha o pedaço desfocado que está atrás dele. `Glass.BLUR = false` desliga isso.
+- **3 níveis:** leve (botões, campos, capas), intermediário (cards, categorias, menu, barras), intenso (janelas, ajustes, menu aberto).
+- **Foco:** vidro mais firme + contorno violeta de 3dp + véu violeta suave (igual à linguagem de foco anterior).
+- **Capas:** a imagem do filme não vira vidro; ganha moldura (borda e reflexo) por cima (`Glass.frame`).
+- **Sem sombra elevada** nos cards (custo de GPU em TV Box). Profundidade vem de tinta, borda e reflexo.
+- **Teclados e listas em tela cheia:** a janela deles usa o mesmo fundo global (`Glass.backdrop`).

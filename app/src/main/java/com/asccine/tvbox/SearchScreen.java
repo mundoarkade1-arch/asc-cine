@@ -28,7 +28,6 @@ final class SearchScreen extends Screen {
     SearchScreen(ShellActivity act) {
         super(act);
         root = new FrameLayout(act);
-        root.setBackgroundColor(C.BG);
         LinearLayout col = new LinearLayout(act);
         col.setOrientation(LinearLayout.VERTICAL);
         root.addView(col, new FrameLayout.LayoutParams(-1, -1));

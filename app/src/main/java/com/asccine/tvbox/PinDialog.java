@@ -80,6 +80,9 @@ public final class PinDialog {
     private void build(String title, String message) {
         dialog = new Dialog(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialog.setCancelable(true);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(Glass.backdrop(activity));
+        }
         dialog.setOnCancelListener(d -> {
             if (listener != null) {
                 listener.onCancel();
@@ -88,7 +91,6 @@ public final class PinDialog {
 
         ScrollView scroll = new ScrollView(activity);
         scroll.setFillViewport(true);
-        scroll.setBackgroundColor(COLOR_BACK);
 
         LinearLayout root = new LinearLayout(activity);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -151,7 +153,7 @@ public final class PinDialog {
         b.setAllCaps(false);
         b.setTextColor(COLOR_WHITE);
         b.setTextSize(label.length() == 1 ? 22 : 17);
-        b.setBackgroundResource(R.drawable.bg_button);
+        b.setBackground(Glass.selectBg(activity, Glass.LIGHT, 14));
         b.setMinWidth(0);
         b.setMinHeight(0);
         b.setMinimumWidth(0);

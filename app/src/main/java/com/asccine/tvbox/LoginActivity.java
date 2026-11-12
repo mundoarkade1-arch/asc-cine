@@ -51,7 +51,6 @@ public class LoginActivity extends Activity {
 
     private void build() {
         ScrollView sv = new ScrollView(this);
-        sv.setBackgroundColor(C.BG);
         sv.setFillViewport(true);
         LinearLayout col = new LinearLayout(this);
         col.setOrientation(LinearLayout.VERTICAL);
@@ -168,7 +167,7 @@ public class LoginActivity extends Activity {
         e.setInputType(inputType);
         e.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         e.setPadding(Ui.dp(this, 22), Ui.dp(this, 16), Ui.dp(this, 22), Ui.dp(this, 16));
-        e.setBackground(Ui.focusBg(this, C.SURFACE, C.SURFACE_FOCUS, 14, C.LINE, Ui.dp(this, 1)));
+        e.setBackground(Glass.focusBg(this, Glass.LIGHT, 14));
         e.setFocusable(true);
         return e;
     }
@@ -191,8 +190,7 @@ public class LoginActivity extends Activity {
     }
 
     private void style(TextView tab, boolean on) {
-        tab.setBackground(Ui.focusBg(this, on ? C.ACCENT : C.SURFACE,
-                on ? C.ACCENT : C.SURFACE_FOCUS, 14, C.LINE, Ui.dp(this, 1)));
+        tab.setBackground(Ui.tabBg(this, on));
         tab.setTextColor(on ? C.ON_ACCENT : C.TEXT);
     }
 

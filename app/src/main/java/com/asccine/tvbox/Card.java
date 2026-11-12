@@ -54,7 +54,8 @@ final class Card extends FrameLayout {
         corner.setTranslationY(Ui.dp(c, 8));
 
         FrameLayout poster = new FrameLayout(c);
-        poster.setBackground(Ui.shape(C.SURFACE, r, 0, 0));
+        poster.setBackground(Glass.drawable(c, Glass.LIGHT, 16));
+        poster.setForeground(Glass.frame(c, 16));
         final float radius = r;
         poster.setOutlineProvider(new ViewOutlineProvider() {
             @Override

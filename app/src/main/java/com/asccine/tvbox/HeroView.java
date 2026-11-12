@@ -84,7 +84,6 @@ final class HeroView extends FrameLayout {
         this.act = act;
         this.owner = owner;
         setLayoutParams(new LinearLayout.LayoutParams(-1, heightPx));
-        setBackgroundColor(C.BG);
         // A foto do fundo nunca pode passar do banner (invadia o "Continue assistindo").
         setClipChildren(true);
         setClipToPadding(true);
@@ -106,7 +105,7 @@ final class HeroView extends FrameLayout {
         int pw = ph * 2 / 3;
         poster = new ImageView(c);
         poster.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        poster.setBackground(Ui.shape(C.SURFACE, Ui.dp(c, 16), 0, 0));
+        poster.setBackground(Glass.drawable(c, Glass.LIGHT, 16));
         final float rad = Ui.dp(c, 16);
         poster.setOutlineProvider(new ViewOutlineProvider() {
             @Override

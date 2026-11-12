@@ -62,6 +62,8 @@ final class Sidebar extends LinearLayout {
     private final int narrow;
     private final int wide;
     private int active = HOME;
+    private final android.graphics.drawable.Drawable glassNarrow;
+    private final android.graphics.drawable.Drawable glassWide;
 
     Sidebar(Context c, Listener listener, String profileName, int profileAvatar) {
         super(c);
@@ -69,7 +71,9 @@ final class Sidebar extends LinearLayout {
         narrow = Ui.dp(c, 72);
         wide = Ui.dp(c, 250);
         setOrientation(VERTICAL);
-        setBackgroundColor(C.BG);
+        glassNarrow = Glass.sidebar(c, false);
+        glassWide = Glass.sidebar(c, true);
+        setBackground(glassNarrow);
         setPadding(0, Ui.dp(c, 18), 0, Ui.dp(c, 18));
         setLayoutParams(new FrameLayout.LayoutParams(narrow, -1));
 
@@ -152,7 +156,7 @@ final class Sidebar extends LinearLayout {
         row.setGravity(Gravity.CENTER_VERTICAL);
         row.setFocusable(true);
         row.setClickable(true);
-        row.setBackground(Ui.focusBg(c, 0x00000000, C.SURFACE_FOCUS, 14, 0x00000000, 0));
+        row.setBackground(Glass.focusOnly(c, Glass.MID, 14));
         LayoutParams lp = new LayoutParams(-1, Ui.dp(c, 52));
         lp.setMargins(Ui.dp(c, 8), Ui.dp(c, 3), Ui.dp(c, 8), Ui.dp(c, 3));
         addView(row, lp);
@@ -261,7 +265,7 @@ final class Sidebar extends LinearLayout {
         for (Row r : rows) {
             r.label.setVisibility(open ? VISIBLE : GONE);
         }
-        setBackgroundColor(open ? C.SURFACE : C.BG);
+        setBackground(open ? glassWide : glassNarrow);
         android.view.ViewGroup.LayoutParams lp = getLayoutParams();
         int w = open ? wide : narrow;
         if (lp != null && lp.width != w) {

@@ -14,7 +14,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         AppPrefs.applyWindow(this);
-        getWindow().getDecorView().setBackgroundColor(C.BG);
         if (AppLock.isEnabled(this)) {
             askLock();
         } else {

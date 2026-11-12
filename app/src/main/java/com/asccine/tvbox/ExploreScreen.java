@@ -51,7 +51,6 @@ final class ExploreScreen extends Screen {
     ExploreScreen(ShellActivity act) {
         super(act);
         root = new FrameLayout(act);
-        root.setBackgroundColor(C.BG);
         LinearLayout col = new LinearLayout(act);
         col.setOrientation(LinearLayout.VERTICAL);
         root.addView(col, new FrameLayout.LayoutParams(-1, -1));
@@ -124,11 +123,9 @@ final class ExploreScreen extends Screen {
             return;
         }
         kind = k;
-        tabMovies.setBackground(Ui.focusBg(act, k == XtreamApi.Kind.MOVIE ? C.ACCENT : C.SURFACE,
-                k == XtreamApi.Kind.MOVIE ? C.ACCENT : C.SURFACE_FOCUS, 14, C.LINE, Ui.dp(act, 1)));
+        tabMovies.setBackground(Ui.tabBg(act, k == XtreamApi.Kind.MOVIE));
         tabMovies.setTextColor(k == XtreamApi.Kind.MOVIE ? C.ON_ACCENT : C.TEXT);
-        tabSeries.setBackground(Ui.focusBg(act, k == XtreamApi.Kind.SERIES ? C.ACCENT : C.SURFACE,
-                k == XtreamApi.Kind.SERIES ? C.ACCENT : C.SURFACE_FOCUS, 14, C.LINE, Ui.dp(act, 1)));
+        tabSeries.setBackground(Ui.tabBg(act, k == XtreamApi.Kind.SERIES));
         tabSeries.setTextColor(k == XtreamApi.Kind.SERIES ? C.ON_ACCENT : C.TEXT);
         load();
     }
@@ -173,12 +170,7 @@ final class ExploreScreen extends Screen {
         Tile(Context c) {
             super(c);
             setLayoutParams(new LayoutParams(-1, Ui.dp(c, 120)));
-            android.graphics.drawable.StateListDrawable bg =
-                    new android.graphics.drawable.StateListDrawable();
-            bg.addState(new int[]{android.R.attr.state_selected},
-                    Ui.shape(C.SURFACE_FOCUS, Ui.dp(c, 16), C.ACCENT, Ui.dp(c, 3)));
-            bg.addState(new int[]{}, Ui.shape(C.SURFACE, Ui.dp(c, 16), C.LINE, Ui.dp(c, 1)));
-            setBackground(bg);
+            setBackground(Glass.selectBg(c, Glass.MID, 16));
             num = Ui.title(c, "", 14, C.ACCENT);
             LayoutParams nl = new LayoutParams(-2, -2);
             nl.setMargins(Ui.dp(c, 18), Ui.dp(c, 14), 0, 0);

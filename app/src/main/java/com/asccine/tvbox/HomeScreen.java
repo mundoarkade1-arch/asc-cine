@@ -47,7 +47,6 @@ final class HomeScreen extends Screen {
         sv = new ScrollView(act);
         sv.setVerticalScrollBarEnabled(false);
         sv.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        sv.setBackgroundColor(C.BG);
         box = new LinearLayout(act);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setClipChildren(false);
@@ -66,8 +65,7 @@ final class HomeScreen extends Screen {
         lens.setBounds(0, 0, Ui.dp(act, 16), Ui.dp(act, 16));
         searchBar.setCompoundDrawables(lens, null, null, null);
         searchBar.setPadding(Ui.dp(act, 16), Ui.dp(act, 7), Ui.dp(act, 16), Ui.dp(act, 7));
-        searchBar.setBackground(Ui.focusBg(act, C.SURFACE, C.SURFACE, 20, C.LINE,
-                Ui.dp(act, 1)));
+        searchBar.setBackground(Glass.focusBg(act, Glass.MID, 20));
         searchBar.setOnClickListener(v -> openSearchKeyboard());
         LinearLayout.LayoutParams sbl = new LinearLayout.LayoutParams(Ui.dp(act, 260), -2);
         sbl.gravity = Gravity.START;
@@ -422,7 +420,7 @@ final class HomeScreen extends Screen {
                     String t = days == 0 ? "Sua conta vence hoje."
                             : "Sua conta vence em " + days + (days == 1 ? " dia." : " dias.");
                     TextView b = Ui.text(ctx, t, 16, C.ACCENT);
-                    b.setBackground(Ui.shape(C.SURFACE, Ui.dp(ctx, 12), C.ACCENT_40, Ui.dp(ctx, 1)));
+                    b.setBackground(Glass.tinted(ctx, Glass.MID, 12, 1));
                     b.setPadding(Ui.dp(ctx, 16), Ui.dp(ctx, 8), Ui.dp(ctx, 16), Ui.dp(ctx, 8));
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, -2);
                     lp.setMargins(Ui.dp(ctx, 36), Ui.dp(ctx, 12), 0, 0);
@@ -540,7 +538,7 @@ final class HomeScreen extends Screen {
         c.setGravity(Gravity.CENTER);
         c.setFocusable(true);
         c.setClickable(true);
-        c.setBackground(Ui.focusBg(ctx, C.SURFACE, C.SURFACE_FOCUS, 16, C.LINE, Ui.dp(ctx, 1)));
+        c.setBackground(Glass.focusBg(ctx, Glass.MID, 16));
         TextView t = Ui.title(ctx, "Ver mais", 18, C.ACCENT);
         t.setGravity(Gravity.CENTER);
         c.addView(t);

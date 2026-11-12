@@ -37,7 +37,6 @@ public class ProfilesActivity extends Activity {
         root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setGravity(Gravity.CENTER);
-        root.setBackgroundColor(C.BG);
         setContentView(root);
         render();
     }
@@ -190,7 +189,7 @@ public class ProfilesActivity extends Activity {
         box.setLongClickable(true);
         int pad = Ui.dp(this, 10);
         box.setPadding(pad, pad, pad, pad);
-        box.setBackground(Ui.focusBg(this, 0x00000000, C.SURFACE, 22, 0x00000000, 0));
+        box.setBackground(Glass.focusOnly(this, Glass.MID, 22));
         LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(Ui.dp(this, 190), -2);
         blp.setMargins(Ui.dp(this, 8), 0, Ui.dp(this, 8), 0);
         box.setLayoutParams(blp);
@@ -236,13 +235,13 @@ public class ProfilesActivity extends Activity {
         box.setClickable(true);
         int pad = Ui.dp(this, 10);
         box.setPadding(pad, pad, pad, pad);
-        box.setBackground(Ui.focusBg(this, 0x00000000, C.SURFACE, 22, 0x00000000, 0));
+        box.setBackground(Glass.focusOnly(this, Glass.MID, 22));
         LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(Ui.dp(this, 190), -2);
         blp.setMargins(Ui.dp(this, 8), 0, Ui.dp(this, 8), 0);
         box.setLayoutParams(blp);
         TextView plus = Ui.title(this, "+", 56, C.ACCENT);
         plus.setGravity(Gravity.CENTER);
-        plus.setBackground(Ui.shape(C.SURFACE, Ui.dp(this, 75), C.ACCENT_40, Ui.dp(this, 2)));
+        plus.setBackground(Glass.tinted(this, Glass.MID, 75, 2));
         box.addView(plus, new LinearLayout.LayoutParams(Ui.dp(this, 150), Ui.dp(this, 150)));
         TextView t = Ui.title(this, "+ ADICIONAR", 16, C.TEXT2);
         LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(-2, -2);

@@ -125,9 +125,18 @@ final class Ui {
             strokePx = dp(c, 1);
         }
         b.setTextColor(textColor);
-        b.setBackground(focusBg(c, fill, style == DARK ? C.SURFACE_FOCUS : fill, 14, stroke,
-                strokePx));
+        if (style == DARK) {
+            b.setBackground(Glass.focusBg(c, Glass.LIGHT, 14));
+        } else {
+            b.setBackground(focusBg(c, fill, fill, 14, stroke, strokePx));
+        }
         return b;
+    }
+
+    /** Aba/botão de escolha: violeta cheio quando ativo, vidro quando não. */
+    static StateListDrawable tabBg(Context c, boolean on) {
+        return on ? focusBg(c, C.ACCENT, C.ACCENT, 14, C.LINE, dp(c, 1))
+                : Glass.focusBg(c, Glass.LIGHT, 14);
     }
 
     /** Fundo com contorno violeta quando recebe foco. */

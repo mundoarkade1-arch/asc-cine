@@ -25,3 +25,6 @@ Feito no código: cache da Início, banner automático, menu lateral, Top 10 mai
 ## Reidentificação visual (violeta)
 Feito: a cor de destaque deixou de ser verde-limão e passou a ser o violeta vibrante `#B56BFF`. Só cores mudaram: nenhuma função, tela, rota, API, login ou player foi alterada. Não compilado aqui (sem Android SDK): conferir o build no GitHub Actions.
 Pendente (decisão do dono): ícone do app (`ic_launcher_foreground.xml`, `mipmap-*`) e `banner.png` seguem na cor antiga por serem logotipo/imagem.
+
+## Vidro + fundo global
+Feito no código: fundo global, `Glass.java`, cards/botões/campos/menu/janelas/teclados em vidro. Não compilado aqui (sem Android SDK; só conferi a sintaxe): ver o build no GitHub Actions. Conferir no TX9: fluidez da rolagem, legibilidade sobre o fundo, se o logo da imagem atrapalha atrás do banner, e o foco em todas as telas.

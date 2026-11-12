@@ -9,6 +9,7 @@
 |---|---|
 | MainActivity, ProfilesActivity, LoginActivity | entrada, perfis, login |
 | ShellActivity, Sidebar, Screen | casca com barra lateral e telas |
+| Glass | vidro escuro: fundo global, cards, painéis e menus (configuração no topo do arquivo) |
 | HomeScreen, HeroView | início e banner |
 | GridScreen, TvGrid, CardAdapter, Card | grade de cartões grandes |
 | ExploreScreen, SearchScreen, FavoritesScreen, SettingsScreen | demais telas |
@@ -32,3 +33,10 @@
 ## Novos neste lote
 - HomeCache.java: guarda em arquivo os itens mais novos (validade 6 h).
 - res/drawable/avatar_01.xml a avatar_12.xml: os 12 avatares em vetor.
+
+## Fundo e vidro
+- `res/drawable-nodpi/bg_main.jpg`: imagem de fundo de todo o app. Para trocar, substitua o arquivo (mesmo nome).
+- `Glass.java`: constantes no topo (`BACKGROUND_OVERLAY`, `BLUR_OVERLAY`, `BLUR`, `FOCUS_X/Y`) ajustam escuridão, desfoque e corte da imagem.
+- `AppPrefs.applyWindow` coloca o fundo na janela; por isso as telas NÃO têm mais cor de fundo própria.
+- Card novo: use `Glass.drawable` (parado), `Glass.focusBg` (vidro com foco), `Glass.focusOnly` (transparente até ter foco) ou `Glass.selectBg` (listas/grades). Nunca `C.SURFACE` direto.
+- `res/drawable/bg_button.xml` não é mais usado (as teclas usam `Glass.selectBg`); pode ser apagado.

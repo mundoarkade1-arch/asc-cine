@@ -27,6 +27,7 @@ final class AppPrefs {
 
     /** Bloqueia capturas de tela quando o ajuste está ligado. Chamar no começo de cada tela. */
     static void applyWindow(Activity a) {
+        Glass.applyBackdrop(a);
         if (isSecure(a)) {
             a.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         } else {

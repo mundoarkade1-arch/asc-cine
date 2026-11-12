@@ -77,7 +77,6 @@ public class DetailActivity extends Activity {
 
     private void build() {
         FrameLayout root = new FrameLayout(this);
-        root.setBackgroundColor(C.BG);
         backdrop = new ImageView(this);
         backdrop.setScaleType(ImageView.ScaleType.CENTER_CROP);
         backdrop.setAlpha(0.35f);
@@ -110,7 +109,7 @@ public class DetailActivity extends Activity {
 
         poster = new ImageView(this);
         poster.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        poster.setBackground(Ui.shape(C.SURFACE, Ui.dp(this, 14), 0, 0));
+        poster.setBackground(Glass.drawable(this, Glass.LIGHT, 14));
         final float rad = Ui.dp(this, 14);
         poster.setOutlineProvider(new android.view.ViewOutlineProvider() {
             @Override
@@ -165,7 +164,7 @@ public class DetailActivity extends Activity {
         readMore.setFocusable(true);
         readMore.setClickable(true);
         readMore.setPadding(Ui.dp(this, 10), Ui.dp(this, 4), Ui.dp(this, 10), Ui.dp(this, 4));
-        readMore.setBackground(Ui.focusBg(this, 0x00000000, C.SURFACE_FOCUS, 8, 0x00000000, 0));
+        readMore.setBackground(Glass.focusOnly(this, Glass.LIGHT, 8));
         readMore.setVisibility(View.GONE);
         readMore.setOnClickListener(v -> Dialogs.info(this, item.name,
                 details == null || details.plot.isEmpty() ? "Sem sinopse nesta lista."
@@ -544,8 +543,10 @@ public class DetailActivity extends Activity {
     private void showAllEpisodes(List<Integer> inSeason) {
         final Dialog d = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         d.setCancelable(true);
+        if (d.getWindow() != null) {
+            d.getWindow().setBackgroundDrawable(Glass.backdrop(this));
+        }
         ScrollView scroll = new ScrollView(this);
-        scroll.setBackgroundColor(C.BG);
         scroll.setVerticalScrollBarEnabled(false);
         LinearLayout col = new LinearLayout(this);
         col.setOrientation(LinearLayout.VERTICAL);
@@ -637,7 +638,11 @@ public class DetailActivity extends Activity {
         t.setGravity(Gravity.CENTER);
         t.setFocusable(true);
         t.setClickable(true);
-        t.setBackground(Ui.focusBg(this, fill, fill, 10, stroke, strokePx));
+        if (!current && !seen) {
+            t.setBackground(Glass.focusBg(this, Glass.LIGHT, 10));
+        } else {
+            t.setBackground(Ui.focusBg(this, fill, fill, 10, stroke, strokePx));
+        }
         t.setOnClickListener(v -> playEpisode(index, false));
         t.setOnFocusChangeListener((v, has) -> {
             if (has && infoTarget != null) {

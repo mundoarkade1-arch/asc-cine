@@ -29,11 +29,11 @@ final class Dialogs {
         Window w = d.getWindow();
         if (w != null) {
             w.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            w.setDimAmount(0.75f);
+            w.setDimAmount(0.6f);
             w.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         }
         box.setOrientation(LinearLayout.VERTICAL);
-        box.setBackground(Ui.shape(C.SURFACE, Ui.dp(a, 20), C.LINE, Ui.dp(a, 1)));
+        box.setBackground(Glass.drawable(a, Glass.INTENSE, 20));
         int p = Ui.dp(a, 28);
         box.setPadding(p, p, p, p);
         ScrollView sv = new ScrollView(a);
@@ -115,12 +115,12 @@ final class Dialogs {
         Window w = d.getWindow();
         if (w != null) {
             w.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            w.setDimAmount(0.75f);
+            w.setDimAmount(0.6f);
             w.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         }
         LinearLayout box = new LinearLayout(a);
         box.setOrientation(LinearLayout.VERTICAL);
-        box.setBackground(Ui.shape(C.SURFACE, Ui.dp(a, 20), C.LINE, Ui.dp(a, 1)));
+        box.setBackground(Glass.drawable(a, Glass.INTENSE, 20));
         int p = Ui.dp(a, 24);
         box.setPadding(p, p, p, p);
         box.addView(Ui.title(a, title, 24, C.TEXT));

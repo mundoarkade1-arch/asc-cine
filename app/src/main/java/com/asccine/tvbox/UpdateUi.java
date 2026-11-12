@@ -62,7 +62,7 @@ final class UpdateUi {
         }
         LinearLayout box = new LinearLayout(a);
         box.setOrientation(LinearLayout.VERTICAL);
-        box.setBackground(Ui.shape(C.SURFACE, Ui.dp(a, 20), C.LINE, Ui.dp(a, 1)));
+        box.setBackground(Glass.drawable(a, Glass.INTENSE, 20));
         int p = Ui.dp(a, 28);
         box.setPadding(p, p, p, p);
         box.addView(Ui.title(a, "Baixando atualização", 24, C.TEXT));
