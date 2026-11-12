@@ -26,7 +26,7 @@
             android:fillColor="#D9A066"
             android:pathData="M33,42 a15,17 0 1,0 30,0 a15,17 0 1,0 -30,0 Z" />
         <path
-            android:fillColor="#C8FF00"
+            android:fillColor="@color/asc_accent"
             android:pathData="M40,68 L56,68 L48,82 Z" />
         <path
             android:fillColor="#101010"

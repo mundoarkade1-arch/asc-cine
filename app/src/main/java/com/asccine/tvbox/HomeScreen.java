@@ -316,7 +316,7 @@ final class HomeScreen extends Screen {
         act.focusReady(this);
     }
 
-    /** Título grande do Top 10: "Top 10 de hoje", rótulo limão grande e uma linha fina limão. */
+    /** Título grande do Top 10: "Top 10 de hoje", rótulo violeta grande e uma linha fina violeta. */
     private View topHeader(String tag) {
         LinearLayout h = new LinearLayout(ctx);
         h.setOrientation(LinearLayout.VERTICAL);
@@ -327,16 +327,16 @@ final class HomeScreen extends Screen {
         LinearLayout line1 = new LinearLayout(ctx);
         line1.setOrientation(LinearLayout.HORIZONTAL);
         line1.setGravity(Gravity.CENTER_VERTICAL);
-        TextView t = Ui.title(ctx, Ui.highlight("Top 10 de hoje", "Top 10", C.LIME), 40, C.TEXT);
+        TextView t = Ui.title(ctx, Ui.highlight("Top 10 de hoje", "Top 10", C.ACCENT), 40, C.TEXT);
         t.setSingleLine(true);
         line1.addView(t, new LinearLayout.LayoutParams(-2, -2));
         LinearLayout.LayoutParams glp = new LinearLayout.LayoutParams(-2, -2);
         glp.leftMargin = Ui.dp(ctx, 20);
-        line1.addView(Ui.limeTagBig(ctx, tag, 22), glp);
+        line1.addView(Ui.accentTagBig(ctx, tag, 22), glp);
         h.addView(line1, new LinearLayout.LayoutParams(-2, -2));
 
         View underline = new View(ctx);
-        underline.setBackground(Ui.shape(C.LIME, Ui.dp(ctx, 2), 0, 0));
+        underline.setBackground(Ui.shape(C.ACCENT, Ui.dp(ctx, 2), 0, 0));
         LinearLayout.LayoutParams ulp = new LinearLayout.LayoutParams(Ui.dp(ctx, 200),
                 Ui.dp(ctx, 3));
         ulp.topMargin = Ui.dp(ctx, 10);
@@ -421,8 +421,8 @@ final class HomeScreen extends Screen {
                     slotBanner.removeAllViews();
                     String t = days == 0 ? "Sua conta vence hoje."
                             : "Sua conta vence em " + days + (days == 1 ? " dia." : " dias.");
-                    TextView b = Ui.text(ctx, t, 16, C.LIME);
-                    b.setBackground(Ui.shape(C.SURFACE, Ui.dp(ctx, 12), C.LIME_40, Ui.dp(ctx, 1)));
+                    TextView b = Ui.text(ctx, t, 16, C.ACCENT);
+                    b.setBackground(Ui.shape(C.SURFACE, Ui.dp(ctx, 12), C.ACCENT_40, Ui.dp(ctx, 1)));
                     b.setPadding(Ui.dp(ctx, 16), Ui.dp(ctx, 8), Ui.dp(ctx, 16), Ui.dp(ctx, 8));
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, -2);
                     lp.setMargins(Ui.dp(ctx, 36), Ui.dp(ctx, 12), 0, 0);
@@ -455,7 +455,7 @@ final class HomeScreen extends Screen {
         h.setLayoutParams(lp);
         if (numbered) {
             h.addView(Ui.title(ctx, String.format(java.util.Locale.US, ".%02d", rowNumber++),
-                    14, C.LIME));
+                    14, C.ACCENT));
         }
         TextView t = Ui.title(ctx, title, 26, C.TEXT);
         t.setSingleLine(true);
@@ -465,7 +465,7 @@ final class HomeScreen extends Screen {
         if (tag != null) {
             LinearLayout.LayoutParams glp = new LinearLayout.LayoutParams(-2, -2);
             glp.leftMargin = Ui.dp(ctx, 12);
-            h.addView(Ui.limeTag(ctx, tag), glp);
+            h.addView(Ui.accentTag(ctx, tag), glp);
         }
         return h;
     }
@@ -541,10 +541,10 @@ final class HomeScreen extends Screen {
         c.setFocusable(true);
         c.setClickable(true);
         c.setBackground(Ui.focusBg(ctx, C.SURFACE, C.SURFACE_FOCUS, 16, C.LINE, Ui.dp(ctx, 1)));
-        TextView t = Ui.title(ctx, "Ver mais", 18, C.LIME);
+        TextView t = Ui.title(ctx, "Ver mais", 18, C.ACCENT);
         t.setGravity(Gravity.CENTER);
         c.addView(t);
-        c.addView(Ui.icon(ctx, R.drawable.ic_arrow_ne, 32, C.LIME));
+        c.addView(Ui.icon(ctx, R.drawable.ic_arrow_ne, 32, C.ACCENT));
         c.setOnClickListener(v -> action.run());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(pw, pw * 3 / 2);
         lp.rightMargin = Ui.dp(ctx, 8);

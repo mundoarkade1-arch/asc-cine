@@ -29,7 +29,7 @@
             android:fillColor="#6B4226"
             android:pathData="M33,42 a15,17 0 1,0 30,0 a15,17 0 1,0 -30,0 Z" />
         <path
-            android:fillColor="#C8FF00"
+            android:fillColor="@color/asc_accent"
             android:pathData="M40,68 L56,68 L48,80 Z" />
         <path
             android:fillColor="#101010"
@@ -65,7 +65,7 @@
             android:strokeLineJoin="round"
             android:pathData="M43,50 Q48,54.5 53,50" />
         <path
-            android:fillColor="#C8FF00"
+            android:fillColor="@color/asc_accent"
             android:pathData="M28.7,51 a1.8,1.8 0 1,0 3.6,0 a1.8,1.8 0 1,0 -3.6,0 Z M63.7,51 a1.8,1.8 0 1,0 3.6,0 a1.8,1.8 0 1,0 -3.6,0 Z" />
     </group>
 </vector>

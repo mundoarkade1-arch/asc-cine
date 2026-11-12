@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 /**
  * Cartão grande de filme ou série: capa 2:3 com cantos de 16dp, nota, selo NOVO e nome.
- * No foco: aumenta 6%, ganha contorno limão e um cantinho branco deslocado atrás
+ * No foco: aumenta 6%, ganha contorno violeta e um cantinho branco deslocado atrás
  * ("sombra sólida"). Sem sombra com blur (pesada em TV Box antigo).
  * Nas faixas da Home o próprio cartão recebe o foco; na grade quem recebe é a GridView e o
  * cartão só fica "selecionado" (ver TvGrid).
@@ -69,7 +69,7 @@ final class Card extends FrameLayout {
         placeholder.setOrientation(LinearLayout.VERTICAL);
         placeholder.setGravity(Gravity.CENTER);
         placeholder.setPadding(Ui.dp(c, 10), Ui.dp(c, 10), Ui.dp(c, 10), Ui.dp(c, 10));
-        phInitial = Ui.title(c, "", 48, C.LIME);
+        phInitial = Ui.title(c, "", 48, C.ACCENT);
         phInitial.setGravity(Gravity.CENTER);
         phTitle = Ui.text(c, "", 14, C.TEXT2);
         phTitle.setGravity(Gravity.CENTER);
@@ -89,7 +89,7 @@ final class Card extends FrameLayout {
         rl.setMargins(0, Ui.dp(c, 8), Ui.dp(c, 8), 0);
         poster.addView(rating, rl);
 
-        badgeNew = Ui.pill(c, "NOVO", 12, C.LIME, C.BG);
+        badgeNew = Ui.pill(c, "NOVO", 12, C.ACCENT, C.ON_ACCENT);
         badgeNew.setTypeface(Ui.bold(c));
         LayoutParams nl = new LayoutParams(-2, -2);
         nl.gravity = Gravity.TOP | Gravity.START;
@@ -97,7 +97,7 @@ final class Card extends FrameLayout {
         poster.addView(badgeNew, nl);
 
         outline = new View(c);
-        outline.setBackground(Ui.shape(0x00000000, r, C.LIME, Ui.dp(c, 3)));
+        outline.setBackground(Ui.shape(0x00000000, r, C.ACCENT, Ui.dp(c, 3)));
         outline.setVisibility(View.INVISIBLE);
         addView(outline, new LayoutParams(pw, ph));
 

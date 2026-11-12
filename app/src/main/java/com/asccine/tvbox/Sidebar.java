@@ -205,7 +205,7 @@ final class Sidebar extends LinearLayout {
     private void addRow(Context c, int id, int iconRes, String text) {
         LinearLayout row = makeRow(c, id);
         View marker = new View(c);
-        marker.setBackground(Ui.shape(C.LIME, Ui.dp(c, 2), 0, 0));
+        marker.setBackground(Ui.shape(C.ACCENT, Ui.dp(c, 2), 0, 0));
         marker.setVisibility(INVISIBLE);
         row.addView(marker, new LayoutParams(Ui.dp(c, 4), Ui.dp(c, 28)));
         ImageView icon = new ImageView(c);
@@ -222,16 +222,16 @@ final class Sidebar extends LinearLayout {
         rows.add(new Row(id, row, marker, icon, label, null));
     }
 
-    /** Marca o item da tela atual (barrinha e ícone em limão). */
+    /** Marca o item da tela atual (barrinha e ícone em violeta). */
     void setActive(int id) {
         active = id;
         for (Row r : rows) {
             boolean on = r.id == id;
             r.marker.setVisibility(on ? VISIBLE : INVISIBLE);
             if (r.icon != null) {
-                r.icon.setColorFilter(on ? C.LIME : C.TEXT);
+                r.icon.setColorFilter(on ? C.ACCENT : C.TEXT);
             }
-            r.label.setTextColor(on ? C.LIME : C.TEXT);
+            r.label.setTextColor(on ? C.ACCENT : C.TEXT);
         }
     }
 

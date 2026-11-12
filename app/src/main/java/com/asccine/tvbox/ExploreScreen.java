@@ -62,7 +62,7 @@ final class ExploreScreen extends Screen {
         head.addView(Ui.title(act, "Explorar", 34, C.TEXT));
         View sp = new View(act);
         head.addView(sp, new LinearLayout.LayoutParams(0, 1, 1f));
-        tabMovies = Ui.button(act, "Filmes", Ui.LIME);
+        tabMovies = Ui.button(act, "Filmes", Ui.ACCENT);
         tabSeries = Ui.button(act, "Séries", Ui.DARK);
         LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(Ui.dp(act, 170), -2);
         head.addView(tabMovies, tlp);
@@ -124,12 +124,12 @@ final class ExploreScreen extends Screen {
             return;
         }
         kind = k;
-        tabMovies.setBackground(Ui.focusBg(act, k == XtreamApi.Kind.MOVIE ? C.LIME : C.SURFACE,
-                k == XtreamApi.Kind.MOVIE ? C.LIME : C.SURFACE_FOCUS, 14, C.LINE, Ui.dp(act, 1)));
-        tabMovies.setTextColor(k == XtreamApi.Kind.MOVIE ? C.BG : C.TEXT);
-        tabSeries.setBackground(Ui.focusBg(act, k == XtreamApi.Kind.SERIES ? C.LIME : C.SURFACE,
-                k == XtreamApi.Kind.SERIES ? C.LIME : C.SURFACE_FOCUS, 14, C.LINE, Ui.dp(act, 1)));
-        tabSeries.setTextColor(k == XtreamApi.Kind.SERIES ? C.BG : C.TEXT);
+        tabMovies.setBackground(Ui.focusBg(act, k == XtreamApi.Kind.MOVIE ? C.ACCENT : C.SURFACE,
+                k == XtreamApi.Kind.MOVIE ? C.ACCENT : C.SURFACE_FOCUS, 14, C.LINE, Ui.dp(act, 1)));
+        tabMovies.setTextColor(k == XtreamApi.Kind.MOVIE ? C.ON_ACCENT : C.TEXT);
+        tabSeries.setBackground(Ui.focusBg(act, k == XtreamApi.Kind.SERIES ? C.ACCENT : C.SURFACE,
+                k == XtreamApi.Kind.SERIES ? C.ACCENT : C.SURFACE_FOCUS, 14, C.LINE, Ui.dp(act, 1)));
+        tabSeries.setTextColor(k == XtreamApi.Kind.SERIES ? C.ON_ACCENT : C.TEXT);
         load();
     }
 
@@ -176,10 +176,10 @@ final class ExploreScreen extends Screen {
             android.graphics.drawable.StateListDrawable bg =
                     new android.graphics.drawable.StateListDrawable();
             bg.addState(new int[]{android.R.attr.state_selected},
-                    Ui.shape(C.SURFACE_FOCUS, Ui.dp(c, 16), C.LIME, Ui.dp(c, 3)));
+                    Ui.shape(C.SURFACE_FOCUS, Ui.dp(c, 16), C.ACCENT, Ui.dp(c, 3)));
             bg.addState(new int[]{}, Ui.shape(C.SURFACE, Ui.dp(c, 16), C.LINE, Ui.dp(c, 1)));
             setBackground(bg);
-            num = Ui.title(c, "", 14, C.LIME);
+            num = Ui.title(c, "", 14, C.ACCENT);
             LayoutParams nl = new LayoutParams(-2, -2);
             nl.setMargins(Ui.dp(c, 18), Ui.dp(c, 14), 0, 0);
             addView(num, nl);
@@ -190,7 +190,7 @@ final class ExploreScreen extends Screen {
             ml.gravity = Gravity.BOTTOM;
             ml.setMargins(Ui.dp(c, 18), 0, Ui.dp(c, 18), Ui.dp(c, 14));
             addView(name, ml);
-            android.widget.ImageView arrow = Ui.icon(c, R.drawable.ic_arrow_ne, 26, C.LIME);
+            android.widget.ImageView arrow = Ui.icon(c, R.drawable.ic_arrow_ne, 26, C.ACCENT);
             LayoutParams al = new LayoutParams(Ui.dp(c, 26), Ui.dp(c, 26));
             al.gravity = Gravity.TOP | Gravity.END;
             al.setMargins(0, Ui.dp(c, 12), Ui.dp(c, 14), 0);

@@ -11,7 +11,7 @@
     <group>
         <clip-path android:pathData="M0,48 a48,48 0 1,0 96,0 a48,48 0 1,0 -96,0 Z" />
         <path
-            android:fillColor="#C8FF00"
+            android:fillColor="@color/asc_accent"
             android:pathData="M12,96 C12,76 28,68 48,68 C68,68 84,76 84,96 Z" />
         <path
             android:fillColor="#E3B393"

@@ -18,7 +18,7 @@ final class Ui {
 
     static final int PRIMARY = 0;
     static final int DARK = 1;
-    static final int LIME = 2;
+    static final int ACCENT = 2;
 
     private static Typeface bold;
     private static Typeface medium;
@@ -93,7 +93,7 @@ final class Ui {
         return v;
     }
 
-    /** Botão que recebe foco. style: PRIMARY (branco), DARK (escuro com borda) ou LIME. */
+    /** Botão que recebe foco. style: PRIMARY (branco), DARK (escuro com borda) ou ACCENT (violeta). */
     static TextView button(Context c, CharSequence label, int style) {
         TextView b = new TextView(c);
         b.setText(label);
@@ -113,10 +113,10 @@ final class Ui {
             textColor = C.BG;
             stroke = C.TEXT;
             strokePx = 0;
-        } else if (style == LIME) {
-            fill = C.LIME;
-            textColor = C.BG;
-            stroke = C.LIME;
+        } else if (style == ACCENT) {
+            fill = C.ACCENT;
+            textColor = C.ON_ACCENT;
+            stroke = C.ACCENT;
             strokePx = 0;
         } else {
             fill = C.SURFACE;
@@ -130,30 +130,30 @@ final class Ui {
         return b;
     }
 
-    /** Fundo com contorno limão quando recebe foco. */
+    /** Fundo com contorno violeta quando recebe foco. */
     static StateListDrawable focusBg(Context c, int fill, int fillFocus, float radiusDp,
                                      int stroke, int strokePx) {
         float r = dp(c, radiusDp);
         StateListDrawable s = new StateListDrawable();
-        GradientDrawable on = shape(fillFocus, r, C.LIME, dp(c, 3));
+        GradientDrawable on = shape(fillFocus, r, C.ACCENT, dp(c, 3));
         s.addState(new int[]{android.R.attr.state_focused}, on);
         s.addState(new int[]{android.R.attr.state_pressed}, on);
         s.addState(new int[]{}, shape(fill, r, stroke, strokePx));
         return s;
     }
 
-    /** Retângulo limão com texto preto (como "3D" na página de referência). */
-    static TextView limeTag(Context c, CharSequence t) {
-        TextView v = title(c, t, 13, C.BG);
-        v.setBackground(shape(C.LIME, dp(c, 6), 0, 0));
+    /** Retângulo violeta com texto preto (como "3D" na página de referência). */
+    static TextView accentTag(Context c, CharSequence t) {
+        TextView v = title(c, t, 13, C.ON_ACCENT);
+        v.setBackground(shape(C.ACCENT, dp(c, 6), 0, 0));
         v.setPadding(dp(c, 10), dp(c, 4), dp(c, 10), dp(c, 4));
         return v;
     }
 
-    /** Retângulo limão grande (rótulo "Filmes"/"Séries" do Top 10). Texto sempre #101010. */
-    static TextView limeTagBig(Context c, CharSequence t, float sp) {
-        TextView v = title(c, t, sp, C.BG);
-        v.setBackground(shape(C.LIME, dp(c, 10), 0, 0));
+    /** Retângulo violeta grande (rótulo "Filmes"/"Séries" do Top 10). Texto sempre #101010. */
+    static TextView accentTagBig(Context c, CharSequence t, float sp) {
+        TextView v = title(c, t, sp, C.ON_ACCENT);
+        v.setBackground(shape(C.ACCENT, dp(c, 10), 0, 0));
         v.setPadding(dp(c, 18), dp(c, 6), dp(c, 18), dp(c, 6));
         return v;
     }
@@ -175,7 +175,7 @@ final class Ui {
         return v;
     }
 
-    /** Pinta uma parte do texto (como "assistindo" em limão). */
+    /** Pinta uma parte do texto (como "assistindo" em violeta). */
     static CharSequence highlight(String full, String part, int color) {
         android.text.SpannableString sp = new android.text.SpannableString(full);
         int i = full.indexOf(part);

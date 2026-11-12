@@ -131,7 +131,7 @@ public class DetailActivity extends Activity {
         ilp.leftMargin = Ui.dp(this, 28);
         main.addView(info, ilp);
 
-        info.addView(Ui.limeTag(this, series ? "SÉRIE" : "FILME"));
+        info.addView(Ui.accentTag(this, series ? "SÉRIE" : "FILME"));
         TextView title = Ui.title(this, item.name, series ? 26 : 34, C.TEXT);
         title.setMaxLines(2);
         title.setEllipsize(TextUtils.TruncateAt.END);
@@ -145,7 +145,7 @@ public class DetailActivity extends Activity {
         l2.topMargin = Ui.dp(this, 4);
         info.addView(metaTv, l2);
 
-        genreTv = Ui.text(this, "", series ? 15 : 17, C.LIME);
+        genreTv = Ui.text(this, "", series ? 15 : 17, C.ACCENT);
         genreTv.setSingleLine(true);
         genreTv.setEllipsize(TextUtils.TruncateAt.END);
         genreTv.setVisibility(View.GONE);
@@ -161,7 +161,7 @@ public class DetailActivity extends Activity {
         l6.topMargin = Ui.dp(this, 8);
         info.addView(plotTv, l6);
 
-        readMore = Ui.text(this, "Ler mais", 15, C.LIME);
+        readMore = Ui.text(this, "Ler mais", 15, C.ACCENT);
         readMore.setFocusable(true);
         readMore.setClickable(true);
         readMore.setPadding(Ui.dp(this, 10), Ui.dp(this, 4), Ui.dp(this, 10), Ui.dp(this, 4));
@@ -485,7 +485,7 @@ public class DetailActivity extends Activity {
 
         if (inSeason.size() > VISIBLE_EPISODES) {
             TextView more = cbtn("Ver mais", Ui.DARK);
-            more.setTextColor(C.LIME);
+            more.setTextColor(C.ACCENT);
             more.setOnClickListener(v -> showAllEpisodes(inSeason));
             LinearLayout.LayoutParams mlp = new LinearLayout.LayoutParams(-2, -2);
             mlp.leftMargin = Ui.dp(this, 10);
@@ -557,7 +557,7 @@ public class DetailActivity extends Activity {
         head.setGravity(Gravity.CENTER_VERTICAL);
         col.addView(head, new LinearLayout.LayoutParams(-1, -2));
         head.addView(Ui.title(this, Ui.highlight(seasonName(season) + " - todos os episódios",
-                seasonName(season), C.LIME), 28, C.TEXT));
+                seasonName(season), C.ACCENT), 28, C.TEXT));
         final TextView info = Ui.text(this, "Escolha o episódio. Voltar fecha.", 17, C.TEXT2);
         info.setSingleLine(true);
         info.setEllipsize(TextUtils.TruncateAt.END);
@@ -612,7 +612,7 @@ public class DetailActivity extends Activity {
         }
     }
 
-    /** Visto = limão. Atual = branco com contorno limão. O resto = cinza. */
+    /** Visto = violeta. Atual = branco com contorno violeta. O resto = cinza. */
     private TextView episodeTile(final Catalog.Ep e, final int index, boolean current, float sp,
                                  final TextView infoTarget) {
         PlaybackProgress.Mark m = markOf(index);
@@ -624,11 +624,11 @@ public class DetailActivity extends Activity {
         if (current) {
             fill = C.TEXT;
             text = C.BG;
-            stroke = C.LIME;
+            stroke = C.ACCENT;
             strokePx = Ui.dp(this, 3);
         } else if (seen) {
-            fill = C.LIME;
-            text = C.BG;
+            fill = C.ACCENT;
+            text = C.ON_ACCENT;
         } else {
             fill = C.LINE;
             text = C.TEXT2;

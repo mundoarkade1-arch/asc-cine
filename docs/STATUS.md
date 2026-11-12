@@ -21,3 +21,7 @@ legendas/áudio, atualização automática, código do aparelho com o ASC Admin.
 
 ## Lote de melhorias (sem teste no aparelho ainda)
 Feito no código: cache da Início, banner automático, menu lateral, Top 10 maior, detalhe de série sem rolar, fluxo de perfis, 12 avatares, login único. Não compilado aqui (sem Android SDK): conferir o build no GitHub Actions e testar no TX9.
+
+## Reidentificação visual (violeta)
+Feito: a cor de destaque deixou de ser verde-limão e passou a ser o violeta vibrante `#B56BFF`. Só cores mudaram: nenhuma função, tela, rota, API, login ou player foi alterada. Não compilado aqui (sem Android SDK): conferir o build no GitHub Actions.
+Pendente (decisão do dono): ícone do app (`ic_launcher_foreground.xml`, `mipmap-*`) e `banner.png` seguem na cor antiga por serem logotipo/imagem.

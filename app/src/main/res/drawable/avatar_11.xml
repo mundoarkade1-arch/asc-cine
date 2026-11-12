@@ -6,7 +6,7 @@
     android:viewportWidth="96"
     android:viewportHeight="96">
     <path
-        android:fillColor="#6F8F00"
+        android:fillColor="@color/asc_accent_dark"
         android:pathData="M0,48 a48,48 0 1,0 96,0 a48,48 0 1,0 -96,0 Z" />
     <group>
         <clip-path android:pathData="M0,48 a48,48 0 1,0 96,0 a48,48 0 1,0 -96,0 Z" />
@@ -65,7 +65,7 @@
             android:strokeLineJoin="round"
             android:pathData="M43,50 Q48,54.5 53,50" />
         <path
-            android:fillColor="#C8FF00"
+            android:fillColor="@color/asc_accent"
             android:pathData="M62,30 L70,28 L68,36 Z M62,30 L56,26 L58,35 Z" />
     </group>
 </vector>

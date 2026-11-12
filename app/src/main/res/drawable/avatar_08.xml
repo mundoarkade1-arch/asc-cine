@@ -6,7 +6,7 @@
     android:viewportWidth="96"
     android:viewportHeight="96">
     <path
-        android:fillColor="#E4FF80"
+        android:fillColor="@color/asc_accent_light"
         android:pathData="M0,48 a48,48 0 1,0 96,0 a48,48 0 1,0 -96,0 Z" />
     <group>
         <clip-path android:pathData="M0,48 a48,48 0 1,0 96,0 a48,48 0 1,0 -96,0 Z" />
@@ -59,7 +59,7 @@
             android:fillColor="#EDE3CF"
             android:pathData="M33,31 C33,12 63,12 63,31 Z" />
         <path
-            android:fillColor="#C8FF00"
+            android:fillColor="@color/asc_accent"
             android:pathData="M33,26 L63,26 L63,31 L33,31 Z" />
         <path
             android:fillColor="#D9CDB3"

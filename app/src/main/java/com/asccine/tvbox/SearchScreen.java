@@ -39,7 +39,7 @@ final class SearchScreen extends Screen {
         head.addView(Ui.title(act, "Resultados", 34, C.TEXT));
         View sp = new View(act);
         head.addView(sp, new LinearLayout.LayoutParams(0, 1, 1f));
-        queryButton = Ui.button(act, "Pesquisar de novo", Ui.LIME);
+        queryButton = Ui.button(act, "Pesquisar de novo", Ui.ACCENT);
         head.addView(queryButton, new LinearLayout.LayoutParams(Ui.dp(act, 420), -2));
         queryButton.setOnClickListener(v -> openKeyboard());
         col.addView(head, new LinearLayout.LayoutParams(-1, -2));

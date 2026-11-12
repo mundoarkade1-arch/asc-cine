@@ -65,13 +65,13 @@ public class LoginActivity extends Activity {
         brand.addView(Ui.title(this, "ASC", 40, C.TEXT));
         LinearLayout.LayoutParams tg = new LinearLayout.LayoutParams(-2, -2);
         tg.leftMargin = Ui.dp(this, 12);
-        TextView cine = Ui.title(this, "CINE", 30, C.BG);
-        cine.setBackground(Ui.shape(C.LIME, Ui.dp(this, 8), 0, 0));
+        TextView cine = Ui.title(this, "CINE", 30, C.ON_ACCENT);
+        cine.setBackground(Ui.shape(C.ACCENT, Ui.dp(this, 8), 0, 0));
         cine.setPadding(Ui.dp(this, 12), Ui.dp(this, 2), Ui.dp(this, 12), Ui.dp(this, 2));
         brand.addView(cine, tg);
         col.addView(brand);
 
-        TextView t = Ui.title(this, Ui.highlight("Entrar na sua lista", "sua lista", C.LIME), 34,
+        TextView t = Ui.title(this, Ui.highlight("Entrar na sua lista", "sua lista", C.ACCENT), 34,
                 C.TEXT);
         LinearLayout.LayoutParams tl = new LinearLayout.LayoutParams(-2, -2);
         tl.topMargin = Ui.dp(this, 18);
@@ -122,7 +122,7 @@ public class LoginActivity extends Activity {
         TextView exp = Ui.text(this, "Digite este código no ASC Admin para enviar sua lista.",
                 20, C.TEXT2);
         panelCode.addView(exp);
-        codeTv = Ui.title(this, "...", 46, C.LIME);
+        codeTv = Ui.title(this, "...", 46, C.ACCENT);
         LinearLayout.LayoutParams cl = new LinearLayout.LayoutParams(-2, -2);
         cl.topMargin = Ui.dp(this, 22);
         panelCode.addView(codeTv, cl);
@@ -191,15 +191,15 @@ public class LoginActivity extends Activity {
     }
 
     private void style(TextView tab, boolean on) {
-        tab.setBackground(Ui.focusBg(this, on ? C.LIME : C.SURFACE,
-                on ? C.LIME : C.SURFACE_FOCUS, 14, C.LINE, Ui.dp(this, 1)));
-        tab.setTextColor(on ? C.BG : C.TEXT);
+        tab.setBackground(Ui.focusBg(this, on ? C.ACCENT : C.SURFACE,
+                on ? C.ACCENT : C.SURFACE_FOCUS, 14, C.LINE, Ui.dp(this, 1)));
+        tab.setTextColor(on ? C.ON_ACCENT : C.TEXT);
     }
 
     // ---------- Entrar ----------
 
     private void setStatus(String text, boolean error) {
-        status.setTextColor(error ? C.ERROR : C.LIME);
+        status.setTextColor(error ? C.ERROR : C.ACCENT);
         status.setText(text);
     }
 

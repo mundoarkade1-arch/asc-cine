@@ -126,7 +126,7 @@ final class Dialogs {
         box.addView(Ui.title(a, title, 24, C.TEXT));
         android.widget.ListView lv = new android.widget.ListView(a);
         lv.setDivider(null);
-        lv.setSelector(Ui.shape(0x00000000, Ui.dp(a, 10), C.LIME, Ui.dp(a, 2)));
+        lv.setSelector(Ui.shape(0x00000000, Ui.dp(a, 10), C.ACCENT, Ui.dp(a, 2)));
         lv.setDrawSelectorOnTop(true);
         lv.setVerticalScrollBarEnabled(false);
         lv.setAdapter(new android.widget.BaseAdapter() {
@@ -201,7 +201,7 @@ final class Dialogs {
             int pad = Ui.dp(a, 5);
             img.setPadding(pad, pad, pad, pad);
             img.setBackground(Ui.focusBg(a, 0x00000000, 0x00000000, 36,
-                    i == selected ? C.LIME_40 : 0x00000000,
+                    i == selected ? C.ACCENT_40 : 0x00000000,
                     i == selected ? Ui.dp(a, 2) : 0));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(Ui.dp(a, 64),
                     Ui.dp(a, 64));

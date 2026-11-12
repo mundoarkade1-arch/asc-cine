@@ -48,8 +48,8 @@ public class ProfilesActivity extends Activity {
             renderWelcome();
             return;
         }
-        TextView title = Ui.title(this, manage ? Ui.highlight("Gerenciar perfis", "perfis", C.LIME)
-                : Ui.highlight("Quem está assistindo?", "assistindo", C.LIME), 44, C.TEXT);
+        TextView title = Ui.title(this, manage ? Ui.highlight("Gerenciar perfis", "perfis", C.ACCENT)
+                : Ui.highlight("Quem está assistindo?", "assistindo", C.ACCENT), 44, C.TEXT);
         title.setGravity(Gravity.CENTER);
         root.addView(title, new LinearLayout.LayoutParams(-2, -2));
         TextView sub = Ui.text(this, manage ? "ESCOLHA UM PERFIL PARA MUDAR"
@@ -123,7 +123,7 @@ public class ProfilesActivity extends Activity {
     // ---------- Primeira vez: criar o primeiro perfil ----------
 
     private void renderWelcome() {
-        TextView title = Ui.title(this, Ui.highlight("Crie seu perfil", "perfil", C.LIME), 44,
+        TextView title = Ui.title(this, Ui.highlight("Crie seu perfil", "perfil", C.ACCENT), 44,
                 C.TEXT);
         title.setGravity(Gravity.CENTER);
         root.addView(title, new LinearLayout.LayoutParams(-2, -2));
@@ -201,7 +201,7 @@ public class ProfilesActivity extends Activity {
         img.setScaleType(ImageView.ScaleType.CENTER_CROP);
         av.addView(img, new FrameLayout.LayoutParams(Ui.dp(this, 150), Ui.dp(this, 150)));
         if (active) {
-            TextView badge = Ui.limeTag(this, "ATIVO \u2713");
+            TextView badge = Ui.accentTag(this, "ATIVO \u2713");
             FrameLayout.LayoutParams bl = new FrameLayout.LayoutParams(-2, -2);
             bl.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
             bl.bottomMargin = Ui.dp(this, 6);
@@ -240,9 +240,9 @@ public class ProfilesActivity extends Activity {
         LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(Ui.dp(this, 190), -2);
         blp.setMargins(Ui.dp(this, 8), 0, Ui.dp(this, 8), 0);
         box.setLayoutParams(blp);
-        TextView plus = Ui.title(this, "+", 56, C.LIME);
+        TextView plus = Ui.title(this, "+", 56, C.ACCENT);
         plus.setGravity(Gravity.CENTER);
-        plus.setBackground(Ui.shape(C.SURFACE, Ui.dp(this, 75), C.LIME_40, Ui.dp(this, 2)));
+        plus.setBackground(Ui.shape(C.SURFACE, Ui.dp(this, 75), C.ACCENT_40, Ui.dp(this, 2)));
         box.addView(plus, new LinearLayout.LayoutParams(Ui.dp(this, 150), Ui.dp(this, 150)));
         TextView t = Ui.title(this, "+ ADICIONAR", 16, C.TEXT2);
         LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(-2, -2);

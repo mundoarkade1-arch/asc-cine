@@ -29,7 +29,7 @@
             android:fillColor="#F6D3B8"
             android:pathData="M33,42 a15,17 0 1,0 30,0 a15,17 0 1,0 -30,0 Z" />
         <path
-            android:strokeColor="#C8FF00"
+            android:strokeColor="@color/asc_accent"
             android:strokeWidth="2.2"
             android:strokeLineCap="round"
             android:strokeLineJoin="round"
@@ -41,7 +41,7 @@
             android:fillColor="#1A1A1A"
             android:pathData="M31,38 C32,29 40,26 48,26 C42,29 36,32 34,40 Z" />
         <path
-            android:fillColor="#C8FF00"
+            android:fillColor="@color/asc_accent"
             android:pathData="M58,22 C66,30 66,46 64,62 L59,62 C61,46 61,34 53,25 Z" />
         <path
             android:fillColor="#101010"

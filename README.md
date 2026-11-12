@@ -3,7 +3,7 @@
 App Android nativo (Java) para TV Box, só com **Filmes e Séries** (sem canais ao vivo).
 Lê uma lista IPTV por servidor (Xtream Codes), link M3U ou código do aparelho.
 
-- Cores: preto `#101010`, branco `#FFFFFF` e verde-limão `#C8FF00`.
+- Cores: preto `#101010`, branco `#FFFFFF` e violeta vibrante `#B56BFF` (destaque exclusivo do ASC Cine).
 - Feito para TV Box antigo (exemplo: TX9, Android 7.1, 1 GB de RAM).
 - Controle remoto: setas, OK, Voltar e a tecla de menu (três listras).
 - O APK é gerado e assinado pelo GitHub Actions a cada mudança na `main`.

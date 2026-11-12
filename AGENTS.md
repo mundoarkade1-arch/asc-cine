@@ -16,7 +16,7 @@ Leia primeiro: `docs/STATUS.md`, depois `docs/DECISIONS.md` e `docs/ARQUIVOS.md`
 - Nunca registrar em log: senha, link M3U, servidor/usuário/senha, endereço de vídeo, chave do aparelho.
 - Telas montadas em código (sem XML de layout) para reduzir erro de id: veja `Ui`, `Card`, `Screen`.
 - Em GridView/ListView a lista controla foco, seleção e clique; as linhas NÃO são focáveis.
-- Cores só pela paleta (`C.java` e `colors.xml`). Texto sobre limão é sempre `#101010`.
+- Cores só pela paleta (`C.java` e `colors.xml`). Texto sobre violeta é sempre `#101010` (`C.ON_ACCENT`). A cor de destaque é só `C.ACCENT` / `asc_accent`.
 - Nome do app: só em `strings.xml` (`app_name`). Repositório do Updater: só em `Updater.REPOSITORY`.
 - Serviço do código do aparelho (Supabase): constantes no topo de `DeviceLink.java`.
 - Ao fim de cada etapa: atualizar `docs/STATUS.md` e, se mudou, `DECISIONS.md` e `ARQUIVOS.md`.

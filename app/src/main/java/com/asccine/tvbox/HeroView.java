@@ -129,7 +129,7 @@ final class HeroView extends FrameLayout {
         clp.bottomMargin = Ui.dp(c, 24);
         addView(col, clp);
 
-        tag = Ui.limeTag(c, "FILME");
+        tag = Ui.accentTag(c, "FILME");
         col.addView(tag, new LinearLayout.LayoutParams(-2, -2));
 
         titleTv = Ui.title(c, "", 40, C.TEXT);
@@ -261,7 +261,7 @@ final class HeroView extends FrameLayout {
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) dot.getLayoutParams();
             lp.width = Ui.dp(c, on ? 28 : 8);
             dot.setLayoutParams(lp);
-            dot.setBackground(Ui.shape(on ? C.LIME : C.TEXT3, Ui.dp(c, 4), 0, 0));
+            dot.setBackground(Ui.shape(on ? C.ACCENT : C.TEXT3, Ui.dp(c, 4), 0, 0));
         }
     }
 

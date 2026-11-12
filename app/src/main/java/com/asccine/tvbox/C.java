@@ -9,8 +9,12 @@ final class C {
     static final int TEXT2 = 0xFFA8A8A8;
     static final int TEXT3 = 0xFF6B6B6B;
     static final int LINE = 0xFF2A2A2A;
-    static final int LIME = 0xFFC8FF00;
-    static final int LIME_40 = 0x66C8FF00;
+    /** Violeta vibrante: cor de destaque do ASC Cine (igual a asc_accent). */
+    static final int ACCENT = 0xFFB56BFF;
+    /** Violeta com 40% de opacidade (bordas discretas). */
+    static final int ACCENT_40 = 0x66B56BFF;
+    /** Texto/ícone sobre elementos violeta. */
+    static final int ON_ACCENT = 0xFF101010;
     static final int ERROR = 0xFFFF5C5C;
     static final int SHADE = 0xCC101010;
 

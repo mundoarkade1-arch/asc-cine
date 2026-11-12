@@ -20,7 +20,7 @@
 8. **Fonte:** Poppins Bold e Medium (SIL OFL) em `res/font`, por ser geométrica e estar disponível
    sem internet. Para trocar por Space Grotesk ou Outfit, substitua os dois `.ttf` mantendo os nomes.
 9. **Senha do app:** 4 números (o `PinDialog` herdado é de 4 dígitos). Pedido original: 4 a 6.
-10. **Cartão em foco:** escala 1,06 (120 ms), contorno limão de 3dp e "cantinho" branco deslocado.
+10. **Cartão em foco:** escala 1,06 (120 ms), contorno violeta de 3dp e "cantinho" branco deslocado.
     Sem blur. Na grade o cartão fica "selecionado" e a `TvGrid` acende só quando a grade tem o foco.
 11. **Imagens:** cache LRU de 16 MB, capas em até 480 px, banner em até 1280 px, JPEG em RGB_565.
     Reuso de bitmaps (`inBitmap`) NÃO foi feito.
@@ -35,7 +35,7 @@
 - **Início mais rápida.** Escolhido: guardar em arquivo (HomeCache, criptografado, validade de 6 h) os 200 itens mais novos de Filmes e de Séries. Com arquivo válido, banner e Top 10 aparecem na hora, sem rede. Se o arquivo passou de 6 h, ele é mostrado na hora e atualizado por trás só para a próxima vez (a tela não muda sozinha, para não tirar o foco). Sem arquivo, Filmes e Séries são calculados ao mesmo tempo (Bg com 5 threads) e o banner aparece assim que o primeiro Top 10 chega; quando o segundo chega, entra no banner sem trocar o destaque atual. "Atualizar" apaga o guardado.
 - **Banner gira sempre que visível** (a cada 8 s), pausa só quando sai da tela ou a janela vai para trás (Screen.onPause). Setas no botão trocam e reiniciam a contagem.
 - **Menu lateral:** ordem avatar, Início, Buscar, Favoritos, Filmes, Séries, Explorar; embaixo Atualizar e Ajustes. Foco explícito: cima/baixo tratados por tecla e por nextFocusUp/DownId; nas pontas fica parado; direita sai para a tela.
-- **Top 10:** título 40sp, rótulo limão grande, linha limão, capas 20% maiores que a grade.
+- **Top 10:** título 40sp, rótulo violeta grande, linha violeta, capas 20% maiores que a grade.
 - **Detalhe:** layout em duas colunas que cabe em 1080p. Série: botão Temporada, 30 primeiros episódios, "Ver mais" abre tela inteira. Sinopse em 3 linhas com "Ler mais".
 - **Perfis:** primeira vez (depois da lista) = criar perfil (escrever nome + avatar, ou usar Visitante). Depois, sempre "Quem está assistindo?". Quem já tinha perfis não passa pela criação.
 - **Avatares:** 12 VectorDrawable (avatar_01 a 12), 6 masculinos e 6 femininos.
@@ -60,3 +60,12 @@
 - Filmes e séries são pesquisados ao mesmo tempo (duas threads) e montados em paralelo (uma trava por arquivo).
 - Validade do índice: 12 h. Índice velho é usado na hora e refeito por trás (a busca não espera).
 - Só na primeiríssima busca sem índice pronto a pessoa espera a montagem.
+
+## Identidade visual violeta (ASC Cine)
+- **Destaque único:** `#B56BFF` (`asc_accent` em `colors.xml`, `C.ACCENT` no código). Antigo `asc_lime`/`C.LIME` removido.
+- **Texto sobre violeta:** sempre `#101010` (`asc_on_accent` / `C.ON_ACCENT`).
+- **Borda discreta:** `C.ACCENT_40` (violeta a 40%).
+- **Avatares:** tons limão viraram `asc_accent`, `asc_accent_light` e `asc_accent_dark`. Cores de pele e roupa ficaram iguais.
+- **XMLs sem cor solta:** `bg_button.xml` e avatares usam `@color/...`.
+- **Funções renomeadas (só nome):** `Ui.LIME`→`Ui.ACCENT`, `limeTag`→`accentTag`, `limeTagBig`→`accentTagBig`.
+- **Vermelho:** só no erro (`asc_error`), nunca decorativo. Gradientes: só as sombras escuras de leitura, como antes.

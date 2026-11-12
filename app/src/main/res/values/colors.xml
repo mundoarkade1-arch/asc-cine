@@ -3,7 +3,13 @@
     <!-- Paleta base (imagem de referência do dono) -->
     <color name="asc_bg">#101010</color>
     <color name="asc_white">#FFFFFF</color>
-    <color name="asc_lime">#C8FF00</color>
+    <!-- Destaque exclusivo do ASC Cine: VIOLETA VIBRANTE. Única fonte da cor de destaque. -->
+    <color name="asc_accent">#B56BFF</color>
+    <!-- Texto/ícone sobre elementos violeta (sempre escuro). -->
+    <color name="asc_on_accent">#101010</color>
+    <!-- Variações do violeta (só para ilustrações como os avatares). -->
+    <color name="asc_accent_light">#DDBBFF</color>
+    <color name="asc_accent_dark">#6E3FA3</color>
     <!-- Cores derivadas (profundidade) -->
     <color name="asc_surface">#1A1A1A</color>
     <color name="asc_surface_focus">#222222</color>
