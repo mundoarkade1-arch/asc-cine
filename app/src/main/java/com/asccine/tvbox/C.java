@@ -17,10 +17,10 @@ final class C {
     /** Destaque (botões, item selecionado, barra de progresso): vinho. */
     static final int ACCENT = 0xFF8C1D40;
     /** Destaque com 40% de opacidade (bordas discretas). */
-    static final int ACCENT_40 = 0x66C4486F;
-    /** Brilho suave: contorno de foco, textos e ícones de destaque sobre fundo escuro. */
-    static final int GLOW = 0xFFC4486F;
-    /** Dourado: só detalhes pequenos (estrelas, títulos pequenos, ícones premium). */
+    static final int ACCENT_40 = 0x66D4B06A;
+    /** Dourado fosco (champanhe): contorno de foco, textos e ícones de destaque; contrasta com o vinho. */
+    static final int GLOW = 0xFFD4B06A;
+    /** Dourado das estrelas e do ícone: só detalhes pequenos (estrelas, títulos pequenos, ícones premium). */
     static final int GOLD = 0xFFE3C27A;
     /** Texto/ícone sobre elementos vinho de destaque. */
     static final int ON_ACCENT = 0xFFFFFFFF;

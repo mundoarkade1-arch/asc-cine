@@ -20,7 +20,7 @@
 8. **Fonte:** Poppins Bold e Medium (SIL OFL) em `res/font`, por ser geométrica e estar disponível
    sem internet. Para trocar por Space Grotesk ou Outfit, substitua os dois `.ttf` mantendo os nomes.
 9. **Senha do app:** 4 números (o `PinDialog` herdado é de 4 dígitos). Pedido original: 4 a 6.
-10. **Cartão em foco:** escala 1,06 (120 ms), contorno de brilho de 3dp e "cantinho" branco deslocado.
+10. **Cartão em foco:** escala 1,06 (120 ms), contorno dourado de 3dp e "cantinho" branco deslocado.
     Sem blur. Na grade o cartão fica "selecionado" e a `TvGrid` acende só quando a grade tem o foco.
 11. **Imagens:** cache LRU de 16 MB, capas em até 480 px, banner em até 1280 px, JPEG em RGB_565.
     Reuso de bitmaps (`inBitmap`) NÃO foi feito.
@@ -35,7 +35,7 @@
 - **Início mais rápida.** Escolhido: guardar em arquivo (HomeCache, criptografado, validade de 6 h) os 200 itens mais novos de Filmes e de Séries. Com arquivo válido, banner e Top 10 aparecem na hora, sem rede. Se o arquivo passou de 6 h, ele é mostrado na hora e atualizado por trás só para a próxima vez (a tela não muda sozinha, para não tirar o foco). Sem arquivo, Filmes e Séries são calculados ao mesmo tempo (Bg com 5 threads) e o banner aparece assim que o primeiro Top 10 chega; quando o segundo chega, entra no banner sem trocar o destaque atual. "Atualizar" apaga o guardado.
 - **Banner gira sempre que visível** (a cada 8 s), pausa só quando sai da tela ou a janela vai para trás (Screen.onPause). Setas no botão trocam e reiniciam a contagem.
 - **Menu lateral:** ordem avatar, Início, Buscar, Favoritos, Filmes, Séries, Explorar; embaixo Atualizar e Ajustes. Foco explícito: cima/baixo tratados por tecla e por nextFocusUp/DownId; nas pontas fica parado; direita sai para a tela.
-- **Top 10:** título 40sp, rótulo vinho grande, linha de brilho, capas 20% maiores que a grade.
+- **Top 10:** título 40sp, rótulo vinho grande, linha dourada, capas 20% maiores que a grade.
 - **Detalhe:** layout em duas colunas que cabe em 1080p. Série: botão Temporada, 30 primeiros episódios, "Ver mais" abre tela inteira. Sinopse em 3 linhas com "Ler mais".
 - **Perfis:** primeira vez (depois da lista) = criar perfil (escrever nome + avatar, ou usar Visitante). Depois, sempre "Quem está assistindo?". Quem já tinha perfis não passa pela criação.
 - **Avatares:** 12 VectorDrawable (avatar_01 a 12), 6 masculinos e 6 femininos.
@@ -63,7 +63,7 @@
 
 ## Identidade visual cinema premium (ASC Cine)
 - **Regra 70/20/10:** 70% fundo `#2A0615` (`C.BG`), 20% cards e menus `#43101F` (`C.SURFACE`), 10% destaque `#8C1D40` (`asc_accent` / `C.ACCENT`: botão principal, item selecionado, barra de progresso).
-- **Brilho suave `#C4486F`** (`C.GLOW`): contorno de foco, textos e ícones de destaque (o vinho escuro sozinho não lê bem sobre o fundo).
+- **Dourado fosco `#D4B06A`** (`C.GLOW`): contorno de foco, textos e ícones de destaque, em contraste com o vinho `#8C1D40` (que sozinho não lê bem sobre o fundo). Mais discreto que o dourado das estrelas, para não exagerar.
 - **Dourado `#E3C27A`** (`C.GOLD`): só detalhes pequenos (estrelas, ícone do app). Nunca em áreas grandes.
 - **Texto:** `#FFFFFF` e `#D9C9CF` (`C.TEXT2`). Sobre o vinho de destaque: sempre branco (`C.ON_ACCENT`).
 - **Borda sutil:** `C.LINE` = branco a 8%.
@@ -76,7 +76,7 @@
 - **Fundo único:** `bg_main.jpg` desenhado como fundo da janela (via `AppPrefs.applyWindow`), com camada de vinho de 40% (`Glass.BACKGROUND_OVERLAY`). As telas ficaram transparentes.
 - **Sem blur em tempo real:** o Android 5 e as TV Box fracas não aguentam. A imagem é desfocada UMA vez (bitmap de 96 px, em segundo plano) e cada card desenha o pedaço desfocado que está atrás dele. `Glass.BLUR = false` desliga isso.
 - **3 níveis:** leve (botões, campos, capas), intermediário (cards, categorias, menu, barras), intenso (janelas, ajustes, menu aberto).
-- **Foco:** vidro mais firme + contorno de brilho de 3dp + véu suave (igual à linguagem de foco anterior).
+- **Foco:** vidro mais firme + contorno dourado de 3dp + véu suave (igual à linguagem de foco anterior).
 - **Capas:** a imagem do filme não vira vidro; ganha moldura (borda e reflexo) por cima (`Glass.frame`).
 - **Sem sombra elevada** nos cards (custo de GPU em TV Box). Profundidade vem de tinta, borda e reflexo.
 - **Teclados e listas em tela cheia:** a janela deles usa o mesmo fundo global (`Glass.backdrop`).

@@ -7,8 +7,8 @@
     <color name="asc_accent">#8C1D40</color>
     <!-- Texto/ícone sobre elementos de destaque (sempre branco). -->
     <color name="asc_on_accent">#FFFFFF</color>
-    <!-- Brilho suave (foco, textos de destaque) e dourado (só detalhes pequenos). -->
-    <color name="asc_glow">#C4486F</color>
+    <!-- Dourado fosco (foco e textos de destaque) e dourado das estrelas (só detalhes pequenos). -->
+    <color name="asc_glow">#D4B06A</color>
     <color name="asc_gold">#E3C27A</color>
     <!-- Variações do destaque (só para ilustrações como os avatares). -->
     <color name="asc_accent_light">#E8A3B8</color>

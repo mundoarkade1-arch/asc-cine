@@ -333,7 +333,7 @@ final class Glass {
             this.borderColor = borderColor;
             tintPaint.setColor(TINT[level]);
             veilPaint.setColor((VEIL[level] << 24) | 0x00FFFFFF);
-            hazePaint.setColor((C.GLOW & 0x00FFFFFF) | 0x1F000000);
+            hazePaint.setColor((C.GLOW & 0x00FFFFFF) | 0x14000000);
             edgePaint.setStyle(Paint.Style.STROKE);
             edgePaint.setStrokeWidth(borderPx);
             if (focused) {

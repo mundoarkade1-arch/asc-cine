@@ -3,7 +3,7 @@
 App Android nativo (Java) para TV Box, só com **Filmes e Séries** (sem canais ao vivo).
 Lê uma lista IPTV por servidor (Xtream Codes), link M3U ou código do aparelho.
 
-- Cores: fundo vinho `#2A0615`, cards `#43101F`, destaque `#8C1D40`, brilho `#C4486F`, dourado `#E3C27A` (só detalhes) e texto `#FFFFFF` / `#D9C9CF`. Visual cinema premium.
+- Cores: fundo vinho `#2A0615`, cards `#43101F`, destaque `#8C1D40`, dourado fosco `#D4B06A` (foco e textos de destaque), dourado `#E3C27A` (estrelas e ícone) e texto `#FFFFFF` / `#D9C9CF`. Visual cinema premium.
 - Feito para TV Box antigo (exemplo: TX9, Android 7.1, 1 GB de RAM).
 - Controle remoto: setas, OK, Voltar e a tecla de menu (três listras).
 - O APK é gerado e assinado pelo GitHub Actions a cada mudança na `main`.
