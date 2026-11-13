@@ -93,7 +93,7 @@ final class Ui {
         return v;
     }
 
-    /** Botão que recebe foco. style: PRIMARY (branco), DARK (escuro com borda) ou ACCENT (violeta). */
+    /** Botão que recebe foco. style: PRIMARY e ACCENT (vinho de destaque, texto branco) ou DARK (vidro). */
     static TextView button(Context c, CharSequence label, int style) {
         TextView b = new TextView(c);
         b.setText(label);
@@ -108,12 +108,7 @@ final class Ui {
         int textColor;
         int stroke;
         int strokePx;
-        if (style == PRIMARY) {
-            fill = C.TEXT;
-            textColor = C.BG;
-            stroke = C.TEXT;
-            strokePx = 0;
-        } else if (style == ACCENT) {
+        if (style == PRIMARY || style == ACCENT) {
             fill = C.ACCENT;
             textColor = C.ON_ACCENT;
             stroke = C.ACCENT;
@@ -133,25 +128,25 @@ final class Ui {
         return b;
     }
 
-    /** Aba/botão de escolha: violeta cheio quando ativo, vidro quando não. */
+    /** Aba/botão de escolha: vinho cheio quando ativo, vidro quando não. */
     static StateListDrawable tabBg(Context c, boolean on) {
         return on ? focusBg(c, C.ACCENT, C.ACCENT, 14, C.LINE, dp(c, 1))
                 : Glass.focusBg(c, Glass.LIGHT, 14);
     }
 
-    /** Fundo com contorno violeta quando recebe foco. */
+    /** Fundo com contorno de brilho quando recebe foco. */
     static StateListDrawable focusBg(Context c, int fill, int fillFocus, float radiusDp,
                                      int stroke, int strokePx) {
         float r = dp(c, radiusDp);
         StateListDrawable s = new StateListDrawable();
-        GradientDrawable on = shape(fillFocus, r, C.ACCENT, dp(c, 3));
+        GradientDrawable on = shape(fillFocus, r, C.GLOW, dp(c, 3));
         s.addState(new int[]{android.R.attr.state_focused}, on);
         s.addState(new int[]{android.R.attr.state_pressed}, on);
         s.addState(new int[]{}, shape(fill, r, stroke, strokePx));
         return s;
     }
 
-    /** Retângulo violeta com texto preto (como "3D" na página de referência). */
+    /** Retângulo vinho com texto branco. */
     static TextView accentTag(Context c, CharSequence t) {
         TextView v = title(c, t, 13, C.ON_ACCENT);
         v.setBackground(shape(C.ACCENT, dp(c, 6), 0, 0));
@@ -159,7 +154,7 @@ final class Ui {
         return v;
     }
 
-    /** Retângulo violeta grande (rótulo "Filmes"/"Séries" do Top 10). Texto sempre #101010. */
+    /** Retângulo vinho grande (rótulo "Filmes"/"Séries" do Top 10). Texto branco. */
     static TextView accentTagBig(Context c, CharSequence t, float sp) {
         TextView v = title(c, t, sp, C.ON_ACCENT);
         v.setBackground(shape(C.ACCENT, dp(c, 10), 0, 0));
@@ -184,7 +179,7 @@ final class Ui {
         return v;
     }
 
-    /** Pinta uma parte do texto (como "assistindo" em violeta). */
+    /** Pinta uma parte do texto (como "assistindo" em vinho). */
     static CharSequence highlight(String full, String part, int color) {
         android.text.SpannableString sp = new android.text.SpannableString(full);
         int i = full.indexOf(part);

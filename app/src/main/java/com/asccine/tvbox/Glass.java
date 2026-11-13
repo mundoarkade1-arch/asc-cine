@@ -47,10 +47,10 @@ final class Glass {
 
     // ---------- CONFIGURAÇÃO ----------
 
-    /** Camada escura sobre o fundo (o primeiro par de dígitos é a opacidade: B8 = 72%). */
-    static final int BACKGROUND_OVERLAY = 0xB8101010;
-    /** Camada escura aplicada à imagem desfocada que aparece dentro dos cards. */
-    static final int BLUR_OVERLAY = 0x80101010;
+    /** Camada de vinho sobre o fundo (o primeiro par de dígitos é a opacidade: 66 = 40%). */
+    static final int BACKGROUND_OVERLAY = 0x662A0615;
+    /** Camada de vinho aplicada à imagem desfocada que aparece dentro dos cards. */
+    static final int BLUR_OVERLAY = 0x802A0615;
     /** false = cards só translúcidos, sem a imagem desfocada (aparelho muito fraco). */
     static final boolean BLUR = true;
     /** Parte da imagem que fica visível quando ela é cortada (0,5 = centro). */
@@ -58,14 +58,14 @@ final class Glass {
     static final float FOCUS_Y = 0.5f;
 
     /** Tinta escura de cada nível (opacidade em hexadecimal no primeiro par). */
-    private static final int[] TINT = {0x2E101010, 0x47101010, 0x70101010};
+    private static final int[] TINT = {0xB343101F, 0xCC43101F, 0xE643101F};
     /** Opacidade do véu claro de cada nível. */
-    private static final int[] VEIL = {0x0A, 0x0E, 0x12};
+    private static final int[] VEIL = {0x04, 0x06, 0x08};
     /** Opacidade do reflexo no topo de cada nível. */
-    private static final int[] SHINE = {0x24, 0x2C, 0x36};
+    private static final int[] SHINE = {0x0C, 0x10, 0x14};
     /** Opacidade da borda: em cima e embaixo (mais clara em cima, como reflexo). */
-    private static final int[] EDGE_TOP = {0x52, 0x5C, 0x6B};
-    private static final int[] EDGE_BOTTOM = {0x1A, 0x22, 0x2B};
+    private static final int[] EDGE_TOP = {0x1A, 0x1F, 0x26};
+    private static final int[] EDGE_BOTTOM = {0x0F, 0x14, 0x1A};
 
     private static final int BLUR_WIDTH = 96;
     private static final int BLUR_PASSES = 2;
@@ -241,7 +241,7 @@ final class Glass {
         return new GlassDrawable(level, Ui.dp(c, radiusDp), null, true, false, Ui.dp(c, 1), 0);
     }
 
-    /** Vidro com borda violeta discreta (destaques como aviso de vencimento e código). */
+    /** Vidro com borda de brilho discreta (destaques como aviso de vencimento e código). */
     static Drawable tinted(Context c, int level, float radiusDp, float strokeDp) {
         return new GlassDrawable(level, Ui.dp(c, radiusDp), null, true, false,
                 Ui.dp(c, strokeDp), C.ACCENT_40);
@@ -259,7 +259,7 @@ final class Glass {
         return new GlassDrawable(open ? INTENSE : MID, r, radii, true, false, Ui.dp(c, 1), 0);
     }
 
-    /** Em repouso é vidro; com foco ganha contorno violeta e fica mais firme. */
+    /** Em repouso é vidro; com foco ganha contorno de brilho e fica mais firme. */
     static StateListDrawable focusBg(Context c, int level, float radiusDp) {
         StateListDrawable s = new StateListDrawable();
         Drawable on = focusedGlass(c, level, radiusDp);
@@ -269,7 +269,7 @@ final class Glass {
         return s;
     }
 
-    /** Em repouso é transparente; com foco vira vidro com contorno violeta. */
+    /** Em repouso é transparente; com foco vira vidro com contorno de brilho. */
     static StateListDrawable focusOnly(Context c, int level, float radiusDp) {
         StateListDrawable s = new StateListDrawable();
         Drawable on = focusedGlass(c, level, radiusDp);
@@ -333,11 +333,11 @@ final class Glass {
             this.borderColor = borderColor;
             tintPaint.setColor(TINT[level]);
             veilPaint.setColor((VEIL[level] << 24) | 0x00FFFFFF);
-            hazePaint.setColor((C.ACCENT & 0x00FFFFFF) | 0x1F000000);
+            hazePaint.setColor((C.GLOW & 0x00FFFFFF) | 0x1F000000);
             edgePaint.setStyle(Paint.Style.STROKE);
             edgePaint.setStrokeWidth(borderPx);
             if (focused) {
-                edgePaint.setColor(C.ACCENT);
+                edgePaint.setColor(C.GLOW);
             } else if (borderColor != 0) {
                 edgePaint.setColor(borderColor);
             }
@@ -354,7 +354,7 @@ final class Glass {
                 edgePath.reset();
                 edgePath.addRoundRect(edgeRect, radii, Path.Direction.CW);
             }
-            int shine = (fill ? SHINE[level] : SHINE[LIGHT] - 8) << 24;
+            int shine = (fill ? SHINE[level] : SHINE[LIGHT] - 4) << 24;
             shinePaint.setShader(new LinearGradient(0, b.top, 0, b.top + b.height() * 0.45f,
                     shine | 0x00FFFFFF, 0x00FFFFFF, Shader.TileMode.CLAMP));
             if (!focused && borderColor == 0) {
@@ -410,7 +410,7 @@ final class Glass {
             View host = host();
             if (blur == null || host == null) {
                 basePaint.setShader(null);
-                basePaint.setColor(0xCC101010);
+                basePaint.setColor(0xE643101F);
                 shape(canvas, basePaint);
                 if (BLUR && !failed && blur == null) {
                     unscheduleSelf(retry);

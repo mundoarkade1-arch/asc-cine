@@ -94,11 +94,11 @@ final class HeroView extends FrameLayout {
 
         View scrimH = new View(c);
         scrimH.setBackground(new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
-                new int[]{0xFF101010, 0xE6101010, 0x66101010, 0x00101010}));
+                new int[]{0xFF2A0615, 0xE62A0615, 0x662A0615, 0x002A0615}));
         addView(scrimH, new LayoutParams(-1, -1));
         View scrimV = new View(c);
         scrimV.setBackground(new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP,
-                new int[]{0xFF101010, 0x99101010, 0x00101010}));
+                new int[]{0xFF2A0615, 0x992A0615, 0x002A0615}));
         addView(scrimV, new LayoutParams(-1, -1));
 
         int ph = Math.round(heightPx * 0.74f);
@@ -260,7 +260,7 @@ final class HeroView extends FrameLayout {
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) dot.getLayoutParams();
             lp.width = Ui.dp(c, on ? 28 : 8);
             dot.setLayoutParams(lp);
-            dot.setBackground(Ui.shape(on ? C.ACCENT : C.TEXT3, Ui.dp(c, 4), 0, 0));
+            dot.setBackground(Ui.shape(on ? C.GLOW : C.TEXT3, Ui.dp(c, 4), 0, 0));
         }
     }
 
@@ -341,8 +341,9 @@ final class HeroView extends FrameLayout {
         }
     }
 
-    static String buildMeta(String year, double rating, String duration) {
+    static CharSequence buildMeta(String year, double rating, String duration) {
         StringBuilder b = new StringBuilder();
+        int star = -1;
         if (year != null && !year.isEmpty()) {
             b.append(year);
         }
@@ -350,6 +351,7 @@ final class HeroView extends FrameLayout {
             if (b.length() > 0) {
                 b.append("   \u2022   ");
             }
+            star = b.length();
             b.append(String.format(java.util.Locale.US, "\u2605 %.1f", rating));
         }
         if (duration != null && !duration.isEmpty()) {
@@ -358,6 +360,13 @@ final class HeroView extends FrameLayout {
             }
             b.append(duration);
         }
-        return b.toString();
+        if (star < 0) {
+            return b.toString();
+        }
+        // A estrela em dourado (detalhe pequeno).
+        android.text.SpannableString sp = new android.text.SpannableString(b.toString());
+        sp.setSpan(new android.text.style.ForegroundColorSpan(C.GOLD), star, star + 1,
+                android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return sp;
     }
 }

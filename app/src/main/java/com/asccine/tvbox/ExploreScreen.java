@@ -171,7 +171,7 @@ final class ExploreScreen extends Screen {
             super(c);
             setLayoutParams(new LayoutParams(-1, Ui.dp(c, 120)));
             setBackground(Glass.selectBg(c, Glass.MID, 16));
-            num = Ui.title(c, "", 14, C.ACCENT);
+            num = Ui.title(c, "", 14, C.GLOW);
             LayoutParams nl = new LayoutParams(-2, -2);
             nl.setMargins(Ui.dp(c, 18), Ui.dp(c, 14), 0, 0);
             addView(num, nl);
@@ -182,7 +182,7 @@ final class ExploreScreen extends Screen {
             ml.gravity = Gravity.BOTTOM;
             ml.setMargins(Ui.dp(c, 18), 0, Ui.dp(c, 18), Ui.dp(c, 14));
             addView(name, ml);
-            android.widget.ImageView arrow = Ui.icon(c, R.drawable.ic_arrow_ne, 26, C.ACCENT);
+            android.widget.ImageView arrow = Ui.icon(c, R.drawable.ic_arrow_ne, 26, C.GLOW);
             LayoutParams al = new LayoutParams(Ui.dp(c, 26), Ui.dp(c, 26));
             al.gravity = Gravity.TOP | Gravity.END;
             al.setMargins(0, Ui.dp(c, 12), Ui.dp(c, 14), 0);

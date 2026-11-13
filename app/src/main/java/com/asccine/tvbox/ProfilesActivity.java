@@ -47,8 +47,8 @@ public class ProfilesActivity extends Activity {
             renderWelcome();
             return;
         }
-        TextView title = Ui.title(this, manage ? Ui.highlight("Gerenciar perfis", "perfis", C.ACCENT)
-                : Ui.highlight("Quem está assistindo?", "assistindo", C.ACCENT), 44, C.TEXT);
+        TextView title = Ui.title(this, manage ? Ui.highlight("Gerenciar perfis", "perfis", C.GLOW)
+                : Ui.highlight("Quem está assistindo?", "assistindo", C.GLOW), 44, C.TEXT);
         title.setGravity(Gravity.CENTER);
         root.addView(title, new LinearLayout.LayoutParams(-2, -2));
         TextView sub = Ui.text(this, manage ? "ESCOLHA UM PERFIL PARA MUDAR"
@@ -122,7 +122,7 @@ public class ProfilesActivity extends Activity {
     // ---------- Primeira vez: criar o primeiro perfil ----------
 
     private void renderWelcome() {
-        TextView title = Ui.title(this, Ui.highlight("Crie seu perfil", "perfil", C.ACCENT), 44,
+        TextView title = Ui.title(this, Ui.highlight("Crie seu perfil", "perfil", C.GLOW), 44,
                 C.TEXT);
         title.setGravity(Gravity.CENTER);
         root.addView(title, new LinearLayout.LayoutParams(-2, -2));
@@ -239,7 +239,7 @@ public class ProfilesActivity extends Activity {
         LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(Ui.dp(this, 190), -2);
         blp.setMargins(Ui.dp(this, 8), 0, Ui.dp(this, 8), 0);
         box.setLayoutParams(blp);
-        TextView plus = Ui.title(this, "+", 56, C.ACCENT);
+        TextView plus = Ui.title(this, "+", 56, C.GLOW);
         plus.setGravity(Gravity.CENTER);
         plus.setBackground(Glass.tinted(this, Glass.MID, 75, 2));
         box.addView(plus, new LinearLayout.LayoutParams(Ui.dp(this, 150), Ui.dp(this, 150)));

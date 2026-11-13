@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Botões dos teclados (senha e busca): escuro, e no foco ganha contorno violeta. -->
+<!-- Botões dos teclados (senha e busca): escuro, e no foco ganha contorno de brilho. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/asc_surface_focus" />
-            <stroke android:width="3dp" android:color="@color/asc_accent" />
+            <stroke android:width="3dp" android:color="@color/asc_glow" />
             <corners android:radius="14dp" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/asc_surface_focus" />
-            <stroke android:width="3dp" android:color="@color/asc_accent" />
+            <stroke android:width="3dp" android:color="@color/asc_glow" />
             <corners android:radius="14dp" />
         </shape>
     </item>
     <item android:state_selected="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/asc_surface_focus" />
-            <stroke android:width="3dp" android:color="@color/asc_accent" />
+            <stroke android:width="3dp" android:color="@color/asc_glow" />
             <corners android:radius="14dp" />
         </shape>
     </item>

@@ -84,7 +84,7 @@ public class DetailActivity extends Activity {
         View fade = new View(this);
         fade.setBackground(new android.graphics.drawable.GradientDrawable(
                 android.graphics.drawable.GradientDrawable.Orientation.BOTTOM_TOP,
-                new int[]{0xFF101010, 0xFF101010, 0x00101010}));
+                new int[]{0xFF2A0615, 0xFF2A0615, 0x002A0615}));
         root.addView(fade, new FrameLayout.LayoutParams(-1, Ui.screenH(this) / 2));
 
         // Se a tela for muito pequena, rola (rede de segurança). Em 1080p não rola.
@@ -144,7 +144,7 @@ public class DetailActivity extends Activity {
         l2.topMargin = Ui.dp(this, 4);
         info.addView(metaTv, l2);
 
-        genreTv = Ui.text(this, "", series ? 15 : 17, C.ACCENT);
+        genreTv = Ui.text(this, "", series ? 15 : 17, C.GLOW);
         genreTv.setSingleLine(true);
         genreTv.setEllipsize(TextUtils.TruncateAt.END);
         genreTv.setVisibility(View.GONE);
@@ -160,7 +160,7 @@ public class DetailActivity extends Activity {
         l6.topMargin = Ui.dp(this, 8);
         info.addView(plotTv, l6);
 
-        readMore = Ui.text(this, "Ler mais", 15, C.ACCENT);
+        readMore = Ui.text(this, "Ler mais", 15, C.GLOW);
         readMore.setFocusable(true);
         readMore.setClickable(true);
         readMore.setPadding(Ui.dp(this, 10), Ui.dp(this, 4), Ui.dp(this, 10), Ui.dp(this, 4));
@@ -328,7 +328,7 @@ public class DetailActivity extends Activity {
         primary = cbtn(label, Ui.PRIMARY);
         primary.setTypeface(Ui.bold(this));
         primary.setCompoundDrawablePadding(Ui.dp(this, 8));
-        primary.setCompoundDrawablesWithIntrinsicBounds(tinted(R.drawable.ic_play, C.BG), null,
+        primary.setCompoundDrawablesWithIntrinsicBounds(tinted(R.drawable.ic_play, C.ON_ACCENT), null,
                 null, null);
         primary.setOnClickListener(v -> playPrimary());
         buttons.addView(primary, new LinearLayout.LayoutParams(0, -2, 2.2f));
@@ -484,7 +484,7 @@ public class DetailActivity extends Activity {
 
         if (inSeason.size() > VISIBLE_EPISODES) {
             TextView more = cbtn("Ver mais", Ui.DARK);
-            more.setTextColor(C.ACCENT);
+            more.setTextColor(C.GLOW);
             more.setOnClickListener(v -> showAllEpisodes(inSeason));
             LinearLayout.LayoutParams mlp = new LinearLayout.LayoutParams(-2, -2);
             mlp.leftMargin = Ui.dp(this, 10);
@@ -558,7 +558,7 @@ public class DetailActivity extends Activity {
         head.setGravity(Gravity.CENTER_VERTICAL);
         col.addView(head, new LinearLayout.LayoutParams(-1, -2));
         head.addView(Ui.title(this, Ui.highlight(seasonName(season) + " - todos os episódios",
-                seasonName(season), C.ACCENT), 28, C.TEXT));
+                seasonName(season), C.GLOW), 28, C.TEXT));
         final TextView info = Ui.text(this, "Escolha o episódio. Voltar fecha.", 17, C.TEXT2);
         info.setSingleLine(true);
         info.setEllipsize(TextUtils.TruncateAt.END);
@@ -613,7 +613,7 @@ public class DetailActivity extends Activity {
         }
     }
 
-    /** Visto = violeta. Atual = branco com contorno violeta. O resto = cinza. */
+    /** Visto = vinho. Atual = branco com contorno de brilho. O resto = cinza. */
     private TextView episodeTile(final Catalog.Ep e, final int index, boolean current, float sp,
                                  final TextView infoTarget) {
         PlaybackProgress.Mark m = markOf(index);
@@ -625,7 +625,7 @@ public class DetailActivity extends Activity {
         if (current) {
             fill = C.TEXT;
             text = C.BG;
-            stroke = C.ACCENT;
+            stroke = C.GLOW;
             strokePx = Ui.dp(this, 3);
         } else if (seen) {
             fill = C.ACCENT;

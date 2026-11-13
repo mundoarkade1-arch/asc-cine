@@ -70,7 +70,7 @@ public class LoginActivity extends Activity {
         brand.addView(cine, tg);
         col.addView(brand);
 
-        TextView t = Ui.title(this, Ui.highlight("Entrar na sua lista", "sua lista", C.ACCENT), 34,
+        TextView t = Ui.title(this, Ui.highlight("Entrar na sua lista", "sua lista", C.GLOW), 34,
                 C.TEXT);
         LinearLayout.LayoutParams tl = new LinearLayout.LayoutParams(-2, -2);
         tl.topMargin = Ui.dp(this, 18);
@@ -121,7 +121,7 @@ public class LoginActivity extends Activity {
         TextView exp = Ui.text(this, "Digite este código no ASC Admin para enviar sua lista.",
                 20, C.TEXT2);
         panelCode.addView(exp);
-        codeTv = Ui.title(this, "...", 46, C.ACCENT);
+        codeTv = Ui.title(this, "...", 46, C.GLOW);
         LinearLayout.LayoutParams cl = new LinearLayout.LayoutParams(-2, -2);
         cl.topMargin = Ui.dp(this, 22);
         panelCode.addView(codeTv, cl);
@@ -197,7 +197,7 @@ public class LoginActivity extends Activity {
     // ---------- Entrar ----------
 
     private void setStatus(String text, boolean error) {
-        status.setTextColor(error ? C.ERROR : C.ACCENT);
+        status.setTextColor(error ? C.ERROR : C.GLOW);
         status.setText(text);
     }
 

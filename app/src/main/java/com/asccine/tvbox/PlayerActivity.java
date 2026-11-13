@@ -161,7 +161,7 @@ public class PlayerActivity extends Activity {
 
         pauseIcon = new ImageView(this);
         pauseIcon.setImageResource(R.drawable.ic_play);
-        pauseIcon.setColorFilter(C.ACCENT);
+        pauseIcon.setColorFilter(C.GLOW);
         pauseIcon.setVisibility(View.GONE);
         FrameLayout.LayoutParams pl = new FrameLayout.LayoutParams(Ui.dp(this, 96),
                 Ui.dp(this, 96));
@@ -191,8 +191,8 @@ public class PlayerActivity extends Activity {
         hl.bottomMargin = Ui.dp(this, 10);
         overlay.addView(hint, hl);
 
-        message = Ui.title(this, "", 22, C.ACCENT);
-        message.setBackground(Ui.shape(0xCC101010, Ui.dp(this, 14), 0, 0));
+        message = Ui.title(this, "", 22, C.GLOW);
+        message.setBackground(Ui.shape(0xCC2A0615, Ui.dp(this, 14), 0, 0));
         message.setPadding(Ui.dp(this, 20), Ui.dp(this, 10), Ui.dp(this, 20), Ui.dp(this, 10));
         message.setVisibility(View.GONE);
         FrameLayout.LayoutParams ml = new FrameLayout.LayoutParams(-2, -2);
@@ -628,7 +628,7 @@ public class PlayerActivity extends Activity {
                 : String.format(java.util.Locale.US, "%d:%02d", m, sec);
     }
 
-    /** Barra de progresso fina em violeta (o buffer aparece em cinza). */
+    /** Barra de progresso fina em vinho (o buffer aparece em cinza). */
     private static final class Bar extends View {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final RectF rect = new RectF();
@@ -660,7 +660,7 @@ public class PlayerActivity extends Activity {
                 paint.setColor(0x88FFFFFF);
                 rect.set(0, top, w * Math.min(1f, (float) buf / dur), top + t);
                 canvas.drawRoundRect(rect, t, t, paint);
-                paint.setColor(C.ACCENT);
+                paint.setColor(C.GLOW);
                 float x = w * Math.min(1f, (float) pos / dur);
                 rect.set(0, top, x, top + t);
                 canvas.drawRoundRect(rect, t, t, paint);

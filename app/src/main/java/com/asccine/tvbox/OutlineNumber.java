@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.View;
 
-/** Número grande só de contorno (sem preenchimento), em violeta, para o Top 10. */
+/** Número grande só de contorno (sem preenchimento), em vinho, para o Top 10. */
 final class OutlineNumber extends View {
 
     private final String text;
@@ -17,7 +17,7 @@ final class OutlineNumber extends View {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(Ui.dp(c, 4));
         paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setColor(C.ACCENT);
+        paint.setColor(C.GLOW);
         paint.setTypeface(Ui.bold(c));
         paint.setTextSize(heightPx * 0.78f);
         setFocusable(false);
